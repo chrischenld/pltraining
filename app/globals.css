@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--foreground-rgb: 255, 255, 255;
+	--background-start-rgb: 23, 23, 23;
+	--background-end-rgb: 28, 28, 28;
+	--background-rgb: 26, 26, 26;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		--duration: 0;
+		scroll-behavior: auto;
+	}
+}
+
+body {
+	font-family: monospace;
+	color: rgb(var(--foreground-rgb));
+	background: rgb(var(--background-rgb));
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	color: #f5f5f5;
+	font-family: var(--font-pantasia);
+	font-size: 2rem;
+	text-transform: uppercase;
+	letter-spacing: -0.01rem;
+	width: 100%;
+}
+
+h2 {
+	color: #f5f5f5;
+	/* color: #e5e5e5; */
+	scroll-margin-top: 8rem;
+	font-size: 1rem;
+	letter-spacing: 0.05rem;
+	margin-top: 4rem;
+}
+
+h3 {
+	color: #e5e5e5;
+	/* color: #a3a3a3; */
+	scroll-margin-top: 8rem;
+	letter-spacing: 0.05rem;
+	margin-top: 4rem;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-pantasia);
+	text-transform: uppercase;
+	line-height: 1.8;
+	width: 100%;
+}
+
+h2 + h3 {
+	margin-top: 2rem;
+}
+
+a {
+	text-transform: uppercase;
+	font-family: var(--font-pantasia);
+}
+
+li > a {
+	text-transform: uppercase;
+	font-family: var(--font-pantasia);
+	letter-spacing: 0.025rem;
+}
+
+ol,
+ul {
+	width: 100%;
+}
+
+p,
+li {
+	line-height: 1.8;
+}
+
+caption {
+	font-size: 0.75rem;
+	color: #737373;
+}
+
+footer {
+	margin-top: 4rem;
+}
+
+footer a {
+	font-size: 0.75rem;
+	letter-spacing: 0.025rem;
+}
+
+@layer utilities {
+	.text-balance {
+		text-wrap: balance;
+	}
+
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+}
+
+:focus {
+	/* border: 2px solid white; */
+	outline: 2px solid #d1fae5;
+	border-radius: 1px;
+}
+
+.activeLink::before {
+	content: "→";
+	position: absolute;
+	left: -1rem;
+}
+
+.name {
+	font-family: var(--font-pantasia);
+	font-size: 2rem;
+	text-transform: uppercase;
+	letter-spacing: -0.01rem;
+}
+
+.kerned {
+	font-kerning: auto;
+}
