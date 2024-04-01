@@ -18,8 +18,8 @@ const pantasia = Pantasia({
 });
 
 export const metadata: Metadata = {
-	title: "cc.cc",
-	description: "design works",
+	title: "pltraining",
+	description: "power",
 };
 
 export default function RootLayout({

@@ -1,3 +1,3 @@
 {
-  "/page": "app/page.js"
+  "/api/add-pet/route": "app/api/add-pet/route.js"
 }
