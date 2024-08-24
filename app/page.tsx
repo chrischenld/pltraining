@@ -9,9 +9,17 @@ export default async function Home() {
 	const { rows: todos } = data;
 
 	return (
-		<main className="flex flex-col p-16 gap-16">
-			<Link href="/new-entry">new entry</Link>
-			<h2>home</h2>
+		<main className="flex flex-col px-4 py-8 gap-8">
+			<h1>Trainer</h1>
+			<Link href="/powerlifting" className="text-fg-default">
+				<p className="text-fg-muted">Powerlifting</p>
+				Start→
+			</Link>
+			<Link href="/" className="text-fg-muted">
+				<p className="text-fg-muted">Calisthenics</p>
+				Coming soon
+			</Link>
+			{/* <Link href="/new-entry">new entry</Link>
 			<CreateRows />
 			<AddForm />
 			<ul>
@@ -24,7 +32,7 @@ export default async function Home() {
 						<DeleteForm id={todo.id} todo={todo.text} />
 					</li>
 				))}
-			</ul>
+			</ul> */}
 		</main>
 	);
 }

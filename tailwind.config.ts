@@ -19,6 +19,22 @@ const config: Config = {
 			xs: "0.0625rem",
 		},
 		extend: {
+			colors: {
+				default: {
+					base: "#1A1A1E",
+					inset: "#232329",
+					fg: "#FAFAFA",
+					accent: "#8E60BB",
+					border: "#29292F",
+					muted: "#313139",
+				},
+				fg: {
+					default: "#FAFAFA",
+					muted: "#AAA",
+					accent: "#8E60BB",
+					disabled: "#888",
+				},
+			},
 			height: {
 				"112": "28rem",
 				"128": "32rem",
