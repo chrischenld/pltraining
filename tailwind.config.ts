@@ -34,6 +34,9 @@ const config: Config = {
 					accent: "#8E60BB",
 					disabled: "#888",
 				},
+				border: {
+					default: "#414141",
+				},
 			},
 			height: {
 				"112": "28rem",
