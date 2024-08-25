@@ -19,7 +19,6 @@ export default function FormLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
-	backHref: string;
 }>) {
 	return (
 		<main className="flex flex-col">
