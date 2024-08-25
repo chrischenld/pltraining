@@ -4,62 +4,62 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export async function createTodo(
-	prevState: { message: string; resetKey?: string },
-	formData: FormData
-) {
-	const schema = z.object({
-		todo: z.string().min(1),
-	});
-	const parse = schema.safeParse({
-		todo: formData.get("todo"),
-	});
+// export async function createTodo(
+// 	prevState: { message: string; resetKey?: string },
+// 	formData: FormData
+// ) {
+// 	const schema = z.object({
+// 		todo: z.string().min(1),
+// 	});
+// 	const parse = schema.safeParse({
+// 		todo: formData.get("todo"),
+// 	});
 
-	if (!parse.success) {
-		return { message: "failed to create todo" };
-	}
+// 	if (!parse.success) {
+// 		return { message: "failed to create todo" };
+// 	}
 
-	const data = parse.data;
+// 	const data = parse.data;
 
-	try {
-		await sql`
-        INSERT INTO todos (text)
-        VALUES (${data.todo})
-        `;
+// 	try {
+// 		await sql`
+//         INSERT INTO todos (text)
+//         VALUES (${data.todo})
+//         `;
 
-		revalidatePath("/");
-		return {
-			message: `Added todo ${data.todo}`,
-			resetKey: Date.now().toString(),
-		};
-	} catch (e) {
-		return { message: `Failed to create todo` };
-	}
-}
+// 		revalidatePath("/");
+// 		return {
+// 			message: `Added todo ${data.todo}`,
+// 			resetKey: Date.now().toString(),
+// 		};
+// 	} catch (e) {
+// 		return { message: `Failed to create todo` };
+// 	}
+// }
 
-export async function deleteTodo(prevState: any, formData: FormData) {
-	const schema = z.object({
-		id: z.string().min(1),
-		todo: z.string().min(1),
-	});
+// export async function deleteTodo(prevState: any, formData: FormData) {
+// 	const schema = z.object({
+// 		id: z.string().min(1),
+// 		todo: z.string().min(1),
+// 	});
 
-	const data = schema.parse({
-		id: formData.get("id"),
-		todo: formData.get("todo"),
-	});
+// 	const data = schema.parse({
+// 		id: formData.get("id"),
+// 		todo: formData.get("todo"),
+// 	});
 
-	try {
-		await sql`
-            DELETE FROM todos
-            WHERE id = ${data.id};
-        `;
+// 	try {
+// 		await sql`
+//             DELETE FROM todos
+//             WHERE id = ${data.id};
+//         `;
 
-		revalidatePath("/");
-		return { message: `deleted todo ${data.todo}` };
-	} catch (e) {
-		return { message: `failed to delete` };
-	}
-}
+// 		revalidatePath("/");
+// 		return { message: `deleted todo ${data.todo}` };
+// 	} catch (e) {
+// 		return { message: `failed to delete` };
+// 	}
+// }
 
 export async function createRows(prevState: any, formData: FormData) {
 	try {

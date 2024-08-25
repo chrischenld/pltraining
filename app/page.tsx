@@ -1,13 +1,10 @@
+import Link from "next/link";
 import { sql } from "@vercel/postgres";
 import AddForm from "./AddForm";
 import DeleteForm from "./DeleteForm";
 import CreateRows from "./CreateRows";
-import Link from "next/link";
 
 export default async function Home() {
-	let data = await sql`SELECT * FROM todos`;
-	const { rows: todos } = data;
-
 	return (
 		<main className="flex flex-col px-4 py-8 gap-8">
 			<h1>Trainer</h1>
