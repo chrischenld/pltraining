@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { sql } from "@vercel/postgres";
-import AddForm from "./AddForm";
-import DeleteForm from "./DeleteForm";
-import CreateRows from "./CreateRows";
+// import AddForm from "../testing/AddForm";
+// import DeleteForm from "../testing/DeleteForm";
+// import CreateRows from "./CreateRows";
 
 export default async function Home() {
 	return (
