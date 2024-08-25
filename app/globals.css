@@ -69,7 +69,12 @@ h6 {
 	line-height: 1.8;
 }
 
-a,
+a {
+	color: #f5f5f5;
+	font-size: 0.75rem;
+}
+
+header a,
 p,
 li {
 	font-size: 0.75rem;
