@@ -33,9 +33,15 @@ const config: Config = {
 					muted: "#AAA",
 					accent: "#8E60BB",
 					disabled: "#888",
+					success: "#47CD8D",
+				},
+				bg: {
+					base: "#222",
+					default: "#303030",
 				},
 				border: {
 					default: "#414141",
+					strong: "#FAFAFA",
 				},
 			},
 			height: {
