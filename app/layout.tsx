@@ -1,25 +1,19 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Inter, Fragment_Mono } from "next/font/google";
-import Pantasia from "next/font/local";
+import { Fragment_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
 const fragmentMono = Fragment_Mono({
 	subsets: ["latin"],
 	weight: "400",
 	display: "swap",
 	variable: "--font-fragment-mono",
 });
-const pantasia = Pantasia({
-	src: "./fonts/Pantasia-Regular.woff2",
-	variable: "--font-pantasia",
-});
 
 export const metadata: Metadata = {
-	title: "pltraining",
-	description: "power",
+	title: "Trainer",
+	description: "Log and programming for training sessions",
 };
 
 export default function RootLayout({
@@ -30,7 +24,7 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className={`${fragmentMono.variable} ${pantasia.variable}`}
+			className={`${fragmentMono.variable} `}
 			suppressHydrationWarning
 		>
 			<body>
