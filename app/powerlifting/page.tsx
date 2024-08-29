@@ -5,13 +5,72 @@ import Block from "../components/Block";
 export default async function Page() {
 	const cycleData = await sql`
 		SELECT *
-		FROM CyclesOneRow
+		FROM CyclesTestData
 		ORDER BY CYCLE_ID DESC
 		LIMIT 1;
 	  `;
-
 	const lastCycle = cycleData.rows[0];
-	console.log(lastCycle);
+
+	interface Session {
+		session_id: number;
+		completed: boolean;
+		primary_lift_type: string;
+		secondary_lift_type: string;
+		date: Date | null;
+	}
+
+	const sessionData = await sql`
+		SELECT *
+		FROM SessionsTestData
+		WHERE CYCLE_ID = ${lastCycle.cycle_id}
+		ORDER BY SESSION_ID ASC
+	  `;
+	// right now if Cycles table is empty, this will throw an error
+	// need to only conditionally run this if lastCycle exists
+	// but the output also needs to be in scope such that all the code below can use it
+
+	const sessionDataRows = sessionData.rows as Session[];
+
+	const getSessionStatus = (
+		session: Session,
+		index: number
+	): { variant: "completed" | "selected" | "default"; textClass: string } => {
+		if (session.completed) {
+			return { variant: "completed", textClass: "text-fg-success" };
+		} else if (index === sessionDataRows.findIndex((s) => !s.completed)) {
+			return { variant: "selected", textClass: "text-fg-default" };
+		} else {
+			return { variant: "default", textClass: "" };
+		}
+	};
+
+	const truncateLiftType = (lift: string) => {
+		return lift.slice(0, 2);
+	};
+
+	const renderDate = (date: Date | null) => {
+		if (!date) return "--";
+		const dateObject = date instanceof Date ? date : new Date(date);
+		const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+		const day = String(dateObject.getDate()).padStart(2, "0");
+		return `${month}.${day}`;
+	};
+
+	const renderSessions = () => {
+		return sessionDataRows.map((session, index) => {
+			const { variant, textClass } = getSessionStatus(session, index);
+			return (
+				<Block key={session.session_id} variant={variant}>
+					<p className={textClass}>{session.session_id}</p>
+					<p className={textClass}>
+						{truncateLiftType(session.primary_lift_type)}/
+						{truncateLiftType(session.secondary_lift_type)}
+					</p>
+					<p>{session.date ? renderDate(session.date) : "--"}</p>
+				</Block>
+			);
+		});
+	};
 
 	function NewCyclePrompt() {
 		return (
@@ -31,23 +90,7 @@ export default async function Page() {
 					<p>Next session</p>
 					Create session→
 				</Link>
-				<div className="flex gap-2">
-					<Block variant="completed">
-						<p className="text-fg-success">W1D1</p>
-						<p>SQ/DL</p>
-						<p>08.11</p>
-					</Block>
-					<Block variant="selected">
-						<p>W1D2</p>
-						<p>BN/OP</p>
-						<p>08.12</p>
-					</Block>
-					<Block>
-						<p>W1D3</p>
-						<p>DL/SQ</p>
-						<p>--</p>
-					</Block>
-				</div>
+				<div className="grid grid-cols-4 gap-2">{renderSessions()}</div>
 			</div>
 		);
 	}
