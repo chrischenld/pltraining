@@ -19,17 +19,17 @@ export default async function Page() {
 		date: Date | null;
 	}
 
-	const sessionData = await sql`
-		SELECT *
-		FROM SessionsTestData
-		WHERE CYCLE_ID = ${lastCycle.cycle_id}
-		ORDER BY SESSION_ID ASC
-	  `;
-	// right now if Cycles table is empty, this will throw an error
-	// need to only conditionally run this if lastCycle exists
-	// but the output also needs to be in scope such that all the code below can use it
+	let sessionDataRows: Session[] = [];
 
-	const sessionDataRows = sessionData.rows as Session[];
+	if (lastCycle && !lastCycle.completed) {
+		const sessionData = await sql`
+			SELECT *
+			FROM SessionsTestData
+			WHERE CYCLE_ID = ${lastCycle.cycle_id}
+			ORDER BY SESSION_ID ASC
+	`;
+		sessionDataRows = sessionData.rows as Session[];
+	}
 
 	const getSessionStatus = (
 		session: Session,
@@ -95,11 +95,21 @@ export default async function Page() {
 		);
 	}
 
+	function NoSessionsError() {
+		return (
+			<div className="text-red-500">
+				<p>Error: no sessions found for the current cycle</p>
+			</div>
+		);
+	}
+
 	return (
 		<main className="flex flex-col px-4 py-8 gap-8">
 			<h2>Powerlifting</h2>
 			{!lastCycle || lastCycle.completed ? (
 				<NewCyclePrompt />
+			) : sessionDataRows.length === 0 ? (
+				<NoSessionsError />
 			) : (
 				<NextSessionPrompt />
 			)}
