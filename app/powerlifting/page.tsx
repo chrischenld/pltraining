@@ -44,8 +44,22 @@ export default async function Page() {
 		}
 	};
 
+	const padSessionId = (id: number) => {
+		return id.toString().padStart(2, "0");
+	};
+
 	const truncateLiftType = (lift: string) => {
-		return lift.slice(0, 2);
+		if (lift === "SQUAT") {
+			return "SQ";
+		} else if (lift === "BENCH") {
+			return "BN";
+		} else if (lift === "DEADLIFT") {
+			return "DL";
+		} else if (lift === "OVERHEAD_PRESS") {
+			return "OP";
+		} else {
+			return "--";
+		}
 	};
 
 	const renderDate = (date: Date | null) => {
@@ -61,8 +75,8 @@ export default async function Page() {
 			const { variant, textClass } = getSessionStatus(session, index);
 			return (
 				<Block key={session.session_id} variant={variant}>
-					<p className={textClass}>{session.session_id}</p>
-					<p className={textClass}>
+					<p className={textClass}>{padSessionId(session.session_id)}</p>
+					<p>
 						{truncateLiftType(session.primary_lift_type)}/
 						{truncateLiftType(session.secondary_lift_type)}
 					</p>
@@ -90,7 +104,9 @@ export default async function Page() {
 					<p>Next session</p>
 					Create session→
 				</Link>
-				<div className="grid grid-cols-4 gap-2">{renderSessions()}</div>
+				<div className="flex">
+					<div className="grid grid-cols-4 gap-2">{renderSessions()}</div>
+				</div>
 			</div>
 		);
 	}
