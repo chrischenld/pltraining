@@ -12,7 +12,7 @@ export default function Block({ children, variant = "default" }: BlockProps) {
 		default: "border-border-default bg-bg-base",
 		selected: "border-border-strong bg-bg-base",
 		completed: "border-border-default bg-bg-default",
-		empty: "text-fg-muted border-border-default bg-bg-base",
+		empty: "text-fg-disabled border-border-default",
 	};
 
 	return (

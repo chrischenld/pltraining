@@ -86,7 +86,26 @@ export default async function Page() {
 		});
 	};
 
-	const renderEmptySessions = () => {};
+	const renderEmptySessions = () => {
+		return Array.from({ length: 16 }, (_, index) => (
+			<Block key={index} variant="empty">
+				<p className="text-fg-disabled">{padSessionId(index + 1)}</p>
+				<p className="text-fg-disabled">--</p>
+				<p className="text-fg-disabled">--</p>
+			</Block>
+		));
+	};
+
+	// Example of the W1 format
+	// const modRenderEmptySessions = (sessions: number = 16) => {
+	// 	return Array.from({ length: 16 }, (_, index) => (
+	// 		<Block key={index} variant={index % 4 === 0 ? "selected" : "empty"}>
+	// 			<p>W{Math.floor(index / 4) + 1}</p>
+	// 			<p>{index + 1}</p>
+	// 			<p>--</p>
+	// 		</Block>
+	// 	));
+	// };
 
 	function NewCyclePrompt() {
 		return (
@@ -95,8 +114,9 @@ export default async function Page() {
 					<p>Start a new cycle</p>
 					New cycle→
 				</Link>
-				<div className="grid grid-cols-4 gap-2">
-					<p>No active cycle - start a new one</p>
+				<div className="flex">
+					<div className="grid grid-cols-4 gap-2">{renderEmptySessions()}</div>
+					{/* Consider rendering previous cycle if one exists */}
 				</div>
 			</div>
 		);
