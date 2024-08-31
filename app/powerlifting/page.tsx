@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { sql } from "@vercel/postgres";
-import Block from "../components/Block";
+import Block, { BlockVariant } from "../components/Block";
 
 export default async function Page() {
 	const cycleData = await sql`
 		SELECT *
-		FROM CyclesTestData
+		FROM Cycles
 		ORDER BY CYCLE_ID DESC
 		LIMIT 1;
 	  `;
@@ -24,7 +24,7 @@ export default async function Page() {
 	if (lastCycle && !lastCycle.completed) {
 		const sessionData = await sql`
 			SELECT *
-			FROM SessionsTestData
+			FROM Sessions
 			WHERE CYCLE_ID = ${lastCycle.cycle_id}
 			ORDER BY SESSION_ID ASC
 	`;
@@ -34,7 +34,7 @@ export default async function Page() {
 	const getSessionStatus = (
 		session: Session,
 		index: number
-	): { variant: "completed" | "selected" | "default"; textClass: string } => {
+	): { variant: BlockVariant; textClass: string } => {
 		if (session.completed) {
 			return { variant: "completed", textClass: "text-fg-success" };
 		} else if (index === sessionDataRows.findIndex((s) => !s.completed)) {
@@ -86,13 +86,18 @@ export default async function Page() {
 		});
 	};
 
+	const renderEmptySessions = () => {};
+
 	function NewCyclePrompt() {
 		return (
-			<div>
+			<div className="flex flex-col gap-8">
 				<Link href="/powerlifting/new-cycle">
 					<p>Start a new cycle</p>
 					New cycle→
 				</Link>
+				<div className="grid grid-cols-4 gap-2">
+					<p>No active cycle - start a new one</p>
+				</div>
 			</div>
 		);
 	}
