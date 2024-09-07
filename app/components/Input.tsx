@@ -13,10 +13,10 @@ export default function Input({ type, label, ...props }: Input): JSX.Element {
 		<div className="relative">
 			<input
 				type={type}
-				className={`bg-bg-default min-h-8 px-3 py-4 text-5xl w-full pt-10 ${GeistSans.className} font-semibold tracking-tight [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+				className={`bg-bg-base border border-border-default rounded-[0.125rem] min-h-8 px-4 py-4 text-5xl w-full pt-10 ${GeistSans.className} font-semibold tracking-tight [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 				{...props}
 			/>
-			<label className="absolute text-sm text-fg-muted left-3 top-4">
+			<label className="absolute text-sm text-fg-muted left-4 top-4">
 				{label}
 			</label>
 		</div>

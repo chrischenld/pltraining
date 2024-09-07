@@ -35,13 +35,16 @@ const config: Config = {
 					accent: "#8E60BB",
 					disabled: "#888",
 					success: "#47CD8D",
+					onStrong: "#222222",
 				},
 				bg: {
 					base: "#222",
 					default: "#303030",
+					strong: "#FAFAFA",
 				},
 				border: {
 					default: "#414141",
+					semibold: "#CCCCCC",
 					strong: "#FAFAFA",
 				},
 			},

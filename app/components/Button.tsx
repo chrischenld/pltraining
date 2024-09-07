@@ -16,7 +16,7 @@ export default function Button({ label, loading, className }: ButtonProps) {
 			type="submit"
 			disabled={pending}
 			aria-disabled={pending}
-			className={`h-8 px-4 border text-neutral-100 bg-neutral-900 border-neutral-600 disabled:border-0 ${className}`}
+			className={`h-16 px-4 bg-bg-strong border border-border-semibold rounded-[0.125rem] text-fg-onStrong text-sm uppercase ${className}`}
 		>
 			{pending ? loading ?? label : label}
 		</button>
