@@ -4,9 +4,9 @@ import Button from "@/app/components/Button";
 export default async function Page() {
 	return (
 		<>
-			<div className="flex flex-col gap-6 pb-24">
+			<div className="flex flex-col gap-6">
 				<h2>New cycle</h2>
-				<form id="new-cycle" className="flex flex-col gap-4">
+				<form id="new-cycle" className="flex flex-col gap-4 pb-24">
 					<NumberInput label="Squat" defaultValue={315} min={0} />
 					<NumberInput label="Bench" min={0} />
 					<NumberInput label="Deadlift" min={0} />
