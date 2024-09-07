@@ -14,6 +14,7 @@ const config: Config = {
 			base: "1rem",
 			xl: "1.25rem",
 			"3.5xl": "2rem",
+			"5xl": "3rem",
 		},
 		borderRadius: {
 			xs: "0.0625rem",

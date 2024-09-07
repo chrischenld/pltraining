@@ -115,8 +115,3 @@ footer {
 .kerned {
 	font-kerning: auto;
 }
-
-input,
-textarea {
-	background-color: #27272a;
-}

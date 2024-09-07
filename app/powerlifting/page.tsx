@@ -161,7 +161,7 @@ const NoSessionsError = () => {
 export default async function Page() {
 	const cycleData = await sql`
 		SELECT *
-		FROM CyclesTest
+		FROM Cycles
 		ORDER BY CYCLE_ID DESC
 		LIMIT 1;
 	  `;
@@ -171,7 +171,7 @@ export default async function Page() {
 	if (lastCycle) {
 		const sessionData = await sql`
 			SELECT *
-			FROM SessionsTest
+			FROM Sessions
 			WHERE CYCLE_ID = ${lastCycle.cycle_id}
 			ORDER BY SESSION_ID ASC
 	`;
