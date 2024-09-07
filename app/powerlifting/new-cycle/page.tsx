@@ -4,7 +4,7 @@ export default async function Page() {
 	return (
 		<div className="flex flex-col gap-4">
 			<p>New cycle</p>
-			<NumberInput label="Squat" />
+			<NumberInput label="Squat" defaultValue={315} />
 			<NumberInput label="Bench" />
 			<NumberInput label="Deadlift" />
 			<NumberInput label="Overhead Press" />
