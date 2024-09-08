@@ -4,62 +4,58 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-// export async function createTodo(
-// 	prevState: { message: string; resetKey?: string },
-// 	formData: FormData
-// ) {
-// 	const schema = z.object({
-// 		todo: z.string().min(1),
-// 	});
-// 	const parse = schema.safeParse({
-// 		todo: formData.get("todo"),
-// 	});
+const CycleSchema = z.object({
+	squat: z.number().positive(),
+	bench: z.number().positive(),
+	deadlift: z.number().positive(),
+	overheadPress: z.number().positive(),
+});
 
-// 	if (!parse.success) {
-// 		return { message: "failed to create todo" };
-// 	}
+export async function createNewCycle(formData: FormData) {
+	const rawData = {
+		squat: Number(formData.get("squat")),
+		bench: Number(formData.get("bench")),
+		deadlift: Number(formData.get("deadlift")),
+		overheadPress: Number(formData.get("overheadPress")),
+	};
 
-// 	const data = parse.data;
+	try {
+		const validatedData = CycleSchema.parse(rawData);
 
-// 	try {
-// 		await sql`
-//         INSERT INTO todos (text)
-//         VALUES (${data.todo})
-//         `;
+		await sql`
+        INSERT INTO Cycles (
+          user_id, 
+          start_date, 
+          squat_training_max, 
+          bench_training_max, 
+          deadlift_training_max, 
+          overhead_press_training_max, 
+          completed
+        ) VALUES (
+          1, 
+          CURRENT_DATE, 
+          ${validatedData.squat}, 
+          ${validatedData.bench}, 
+          ${validatedData.deadlift}, 
+          ${validatedData.overheadPress}, 
+          false
+        )
+      `;
+		return { success: true };
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			console.error("Validation error:", error.errors);
+			return { success: false, error: "Invalid input data" };
+		}
+		console.error("Failed to create new cycle:", error);
+		return { success: false, error: "Failed to create new cycle" };
+	}
+}
 
-// 		revalidatePath("/");
-// 		return {
-// 			message: `Added todo ${data.todo}`,
-// 			resetKey: Date.now().toString(),
-// 		};
-// 	} catch (e) {
-// 		return { message: `Failed to create todo` };
-// 	}
-// }
-
-// export async function deleteTodo(prevState: any, formData: FormData) {
-// 	const schema = z.object({
-// 		id: z.string().min(1),
-// 		todo: z.string().min(1),
-// 	});
-
-// 	const data = schema.parse({
-// 		id: formData.get("id"),
-// 		todo: formData.get("todo"),
-// 	});
-
-// 	try {
-// 		await sql`
-//             DELETE FROM todos
-//             WHERE id = ${data.id};
-//         `;
-
-// 		revalidatePath("/");
-// 		return { message: `deleted todo ${data.todo}` };
-// 	} catch (e) {
-// 		return { message: `failed to delete` };
-// 	}
-// }
+//
+//
+//
+//
 
 export async function createRows(prevState: any, formData: FormData) {
 	try {
@@ -177,3 +173,60 @@ export async function setRepsPerformed(prevState: any, formData: FormData) {
 		return { message: `Failed to assign date` };
 	}
 }
+
+// export async function createTodo(
+// 	prevState: { message: string; resetKey?: string },
+// 	formData: FormData
+// ) {
+// 	const schema = z.object({
+// 		todo: z.string().min(1),
+// 	});
+// 	const parse = schema.safeParse({
+// 		todo: formData.get("todo"),
+// 	});
+
+// 	if (!parse.success) {
+// 		return { message: "failed to create todo" };
+// 	}
+
+// 	const data = parse.data;
+
+// 	try {
+// 		await sql`
+//         INSERT INTO todos (text)
+//         VALUES (${data.todo})
+//         `;
+
+// 		revalidatePath("/");
+// 		return {
+// 			message: `Added todo ${data.todo}`,
+// 			resetKey: Date.now().toString(),
+// 		};
+// 	} catch (e) {
+// 		return { message: `Failed to create todo` };
+// 	}
+// }
+
+// export async function deleteTodo(prevState: any, formData: FormData) {
+// 	const schema = z.object({
+// 		id: z.string().min(1),
+// 		todo: z.string().min(1),
+// 	});
+
+// 	const data = schema.parse({
+// 		id: formData.get("id"),
+// 		todo: formData.get("todo"),
+// 	});
+
+// 	try {
+// 		await sql`
+//             DELETE FROM todos
+//             WHERE id = ${data.id};
+//         `;
+
+// 		revalidatePath("/");
+// 		return { message: `deleted todo ${data.todo}` };
+// 	} catch (e) {
+// 		return { message: `failed to delete` };
+// 	}
+// }

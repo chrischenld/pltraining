@@ -142,7 +142,7 @@ const NextSessionPrompt = ({
 		<div className="flex flex-col gap-8">
 			<Link href="/powerlifting/new-session">
 				<p>Next session</p>
-				Create session→
+				Start session→
 			</Link>
 			<CycleTitle cycle={cycle} />
 			<SessionGrid sessions={sessions} />

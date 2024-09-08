@@ -4,7 +4,7 @@ import Input from "./Input";
 
 interface NumberInputProps {
 	label: string;
-	initialValue?: number;
+	id?: string;
 	defaultValue?: number;
 	min?: number;
 	max?: number;
@@ -12,7 +12,7 @@ interface NumberInputProps {
 
 export default function NumberInput({
 	label,
-	initialValue,
+	id,
 	defaultValue,
 	min,
 	max,
@@ -22,6 +22,7 @@ export default function NumberInput({
 		<Input
 			type="number"
 			label={label}
+			id={id}
 			defaultValue={defaultValue}
 			min={min}
 			max={max}
