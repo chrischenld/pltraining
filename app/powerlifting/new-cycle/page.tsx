@@ -1,10 +1,6 @@
 import Button from "@/app/components/Button";
 import NewCycleForm from "@/app/components/NewCycleForm";
 
-const initialState = {
-	message: "",
-};
-
 export default async function Page() {
 	return (
 		<>

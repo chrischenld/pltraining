@@ -11,7 +11,10 @@ const CycleSchema = z.object({
 	overheadPress: z.number().positive(),
 });
 
-export async function createNewCycle(formData: FormData) {
+export async function createNewCycle(
+	prevState: { message: string },
+	formData: FormData
+): Promise<{ message: string }> {
 	const rawData = {
 		squat: Number(formData.get("squat")),
 		bench: Number(formData.get("bench")),
@@ -41,14 +44,14 @@ export async function createNewCycle(formData: FormData) {
           false
         )
       `;
-		return { success: true };
+		return { message: "Created new Cycle" };
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			console.error("Validation error:", error.errors);
-			return { success: false, error: "Invalid input data" };
+			return { message: "Invalid input data" };
 		}
 		console.error("Failed to create new cycle:", error);
-		return { success: false, error: "Failed to create new cycle" };
+		return { message: "Failed to create new cycle" };
 	}
 }
 
