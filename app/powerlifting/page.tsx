@@ -2,13 +2,22 @@ import Link from "next/link";
 import { sql } from "@vercel/postgres";
 import Block, { BlockVariant } from "../components/Block";
 
+const liftTypes = {
+	SQUAT: "SQ",
+	BENCH: "BN",
+	DEADLIFT: "DL",
+	OVERHEAD_PRESS: "OP",
+} as const;
+
+type LiftType = keyof typeof liftTypes;
+
 // Types
 
 interface Session {
 	session_id: number;
 	completed: boolean;
-	primary_lift_type: string;
-	secondary_lift_type: string;
+	primary_lift_type: LiftType;
+	secondary_lift_type: LiftType;
 	date: Date | null;
 	session_number: number;
 }
@@ -27,14 +36,8 @@ const padSessionId = (id: number) => {
 	return id.toString().padStart(2, "0");
 };
 
-const truncateLiftType = (lift: string) => {
-	const liftTypes = {
-		SQUAT: "SQ",
-		BENCH: "BN",
-		DEADLIFT: "DL",
-		OVERHEAD_PRESS: "OP",
-	};
-	return liftTypes[lift as keyof typeof liftTypes] || "--";
+const truncateLiftType = (lift: LiftType) => {
+	return liftTypes[lift] || "--";
 };
 
 const renderDate = (date: Date | null) => {
@@ -159,23 +162,24 @@ const NoSessionsError = () => {
 };
 
 export default async function Page() {
-	const cycleData = await sql`
+	const cycleData = await sql<Cycle>`
 		SELECT *
-		FROM Cycles
+		FROM CyclesTest
 		ORDER BY CYCLE_ID DESC
 		LIMIT 1;
 	  `;
-	const lastCycle = cycleData.rows[0] as Cycle;
+
+	const lastCycle = cycleData.rows[0];
 
 	let sessionDataRows: Session[] = [];
 	if (lastCycle) {
-		const sessionData = await sql`
+		const sessionData = await sql<Session>`
 			SELECT *
-			FROM Sessions
+			FROM SessionsTest
 			WHERE CYCLE_ID = ${lastCycle.cycle_id}
 			ORDER BY SESSION_ID ASC
 	`;
-		sessionDataRows = sessionData.rows as Session[];
+		sessionDataRows = sessionData.rows;
 	}
 
 	return (
