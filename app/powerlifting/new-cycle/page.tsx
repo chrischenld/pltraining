@@ -1,5 +1,5 @@
-import Button from "@/app/components/Button";
-import NewCycleForm from "@/app/components/NewCycleForm";
+import Button from "@/app/components/base/Button";
+import NewCycleForm from "@/app/components/sections/NewCycleForm";
 
 export default async function Page() {
 	return (

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { sql } from "@vercel/postgres";
-import Block, { BlockVariant } from "../components/Block";
+import Block, { BlockVariant } from "../components/base/Block";
 
 const liftTypes = {
 	SQUAT: "SQ",
@@ -164,7 +164,7 @@ const NoSessionsError = () => {
 export default async function Page() {
 	const cycleData = await sql<Cycle>`
 		SELECT *
-		FROM CyclesTest
+		FROM Cycles
 		ORDER BY CYCLE_ID DESC
 		LIMIT 1;
 	  `;
@@ -175,7 +175,7 @@ export default async function Page() {
 	if (lastCycle) {
 		const sessionData = await sql<Session>`
 			SELECT *
-			FROM SessionsTest
+			FROM Sessions
 			WHERE CYCLE_ID = ${lastCycle.cycle_id}
 			ORDER BY SESSION_ID ASC
 	`;

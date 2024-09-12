@@ -21,21 +21,14 @@ const config: Config = {
 		},
 		extend: {
 			colors: {
-				default: {
-					base: "#1A1A1E",
-					inset: "#232329",
-					fg: "#FAFAFA",
-					accent: "#8E60BB",
-					border: "#29292F",
-					muted: "#313139",
-				},
 				fg: {
 					default: "#FAFAFA",
 					muted: "#AAA",
 					accent: "#8E60BB",
 					disabled: "#888",
-					success: "#47CD8D",
+					success: "#1ab777",
 					onStrong: "#222222",
+					danger: "#fd7771",
 				},
 				bg: {
 					base: "#222",
@@ -46,6 +39,13 @@ const config: Config = {
 					default: "#414141",
 					semibold: "#CCCCCC",
 					strong: "#FAFAFA",
+				},
+				unused: {
+					inset: "#232329",
+					fg: "#FAFAFA",
+					border: "#29292F",
+					muted: "#313139",
+					accent: "#8E60BB",
 				},
 			},
 			height: {
