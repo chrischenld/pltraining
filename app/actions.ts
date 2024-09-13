@@ -3,6 +3,7 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { redirect } from "next/navigation";
 
 const CycleSchema = z.object({
 	squat: z.number().positive(),
@@ -12,9 +13,9 @@ const CycleSchema = z.object({
 });
 
 export async function createNewCycle(
-	prevState: { message: string },
+	prevState: { message: string; success: boolean },
 	formData: FormData
-): Promise<{ message: string }> {
+) {
 	const rawData = {
 		squat: Number(formData.get("squat")),
 		bench: Number(formData.get("bench")),
@@ -44,14 +45,16 @@ export async function createNewCycle(
           false
         )
       `;
-		return { message: "Created new Cycle" };
+
+		revalidatePath("/powerlifting");
+		return { message: "Created new Cycle", success: true };
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			console.error("Validation error:", error.errors);
-			return { message: "Invalid input data" };
+			return { message: "Invalid input data", success: false };
 		}
 		console.error("Failed to create new cycle:", error);
-		return { message: "Failed to create new cycle" };
+		return { message: "Failed to create new cycle", success: false };
 	}
 }
 
