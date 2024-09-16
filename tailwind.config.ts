@@ -24,8 +24,8 @@ const config: Config = {
 				fg: {
 					default: "#FAFAFA",
 					muted: "#AAA",
-					accent: "#8E60BB",
 					disabled: "#888",
+					accent: "#8E60BB",
 					success: "#1ab777",
 					onStrong: "#222222",
 					danger: "#fd7771",

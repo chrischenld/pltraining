@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { sql } from "@vercel/postgres";
 import Block, { BlockVariant } from "../components/base/Block";
+import Button from "../components/base/Button";
 
 const liftTypes = {
 	SQUAT: "SQ",
@@ -124,12 +125,19 @@ const NewCyclePrompt = ({
 }) => {
 	return (
 		<div className="flex flex-col gap-8">
-			<Link href="/powerlifting/new-cycle">
+			{/* <Link href="/powerlifting/new-cycle">
 				<p>Start a new cycle</p>
 				New cycle→
-			</Link>
+			</Link> */}
 			<CycleTitle cycle={cycle} />
 			<SessionGrid sessions={sessions} />
+			<footer className="fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
+				<Link href="/powerlifting/new-cycle">
+					<p className=" h-16 flex items-center justify-center text-fg-default">
+						Start new cycle →
+					</p>
+				</Link>
+			</footer>
 		</div>
 	);
 };
