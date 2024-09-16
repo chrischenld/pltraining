@@ -20,6 +20,8 @@ const liftPattern: [LiftType, LiftType][] = [
 	["OVERHEAD_PRESS", "BENCH"],
 ];
 
+let isNewCycleSubmitting = false;
+
 export async function createNewCycle(
 	prevState: { message: string; success: boolean },
 	formData: FormData
@@ -30,6 +32,12 @@ export async function createNewCycle(
 		deadlift: Number(formData.get("deadlift")),
 		overheadPress: Number(formData.get("overheadPress")),
 	};
+
+	if (isNewCycleSubmitting) {
+		return { message: "A submission is already in progress", success: false };
+	}
+
+	isNewCycleSubmitting = true;
 
 	try {
 		const validatedData = CycleSchema.parse(rawData);
@@ -94,6 +102,8 @@ export async function createNewCycle(
 		}
 		console.error("Failed to create new cycle:", error);
 		return { message: "Failed to create new cycle", success: false };
+	} finally {
+		isNewCycleSubmitting = false;
 	}
 }
 

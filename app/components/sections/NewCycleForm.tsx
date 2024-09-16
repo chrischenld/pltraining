@@ -35,15 +35,14 @@ export default function NewCycleForm() {
 				<NumberInput label="Bench" id="bench" min={0} />
 				<NumberInput label="Deadlift" id="deadlift" min={0} />
 				<NumberInput label="Overhead Press" id="overheadPress" min={0} />
+				<div className="pt-5 pb-6 px-4 fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
+					<Button
+						label="Create cycle"
+						loading="Submitting..."
+						className="w-full"
+					/>
+				</div>
 			</form>
-			<footer className="fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
-				<Button
-					label="Create cycle"
-					loading="Submitting..."
-					form="new-cycle"
-					className="w-full"
-				/>
-			</footer>
 		</>
 	);
 }
