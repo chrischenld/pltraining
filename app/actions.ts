@@ -3,7 +3,6 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { redirect } from "next/navigation";
 
 const CycleSchema = z.object({
 	squat: z.number().positive(),
@@ -11,6 +10,15 @@ const CycleSchema = z.object({
 	deadlift: z.number().positive(),
 	overheadPress: z.number().positive(),
 });
+
+type LiftType = "SQUAT" | "BENCH" | "DEADLIFT" | "OVERHEAD_PRESS";
+
+const liftPattern: [LiftType, LiftType][] = [
+	["SQUAT", "DEADLIFT"],
+	["BENCH", "OVERHEAD_PRESS"],
+	["DEADLIFT", "SQUAT"],
+	["OVERHEAD_PRESS", "BENCH"],
+];
 
 export async function createNewCycle(
 	prevState: { message: string; success: boolean },
@@ -26,7 +34,7 @@ export async function createNewCycle(
 	try {
 		const validatedData = CycleSchema.parse(rawData);
 
-		await sql`
+		const cycleResult = await sql`
         INSERT INTO Cycles (
           user_id, 
           start_date, 
@@ -44,10 +52,41 @@ export async function createNewCycle(
           ${validatedData.overheadPress}, 
           false
         )
+        RETURNING cycle_id
       `;
 
+		const cycleId = cycleResult.rows[0].cycle_id;
+
+		for (let i = 0; i < 16; i++) {
+			const sessionNumber = i + 1;
+			const patternIndex = i % 4;
+			const [primaryLift, secondaryLift] = liftPattern[patternIndex];
+
+			await sql`
+              INSERT INTO Sessions (
+                cycle_id,
+                session_number,
+                date,
+                primary_lift_type,
+                secondary_lift_type,
+                completed,
+                created_at,
+                updated_at
+              ) VALUES (
+                ${cycleId},
+                ${sessionNumber},
+                NULL,
+                ${primaryLift},
+                ${secondaryLift},
+                false,
+                CURRENT_TIMESTAMP,
+                CURRENT_TIMESTAMP
+              )
+            `;
+		}
+
 		revalidatePath("/powerlifting");
-		return { message: "Created new Cycle", success: true };
+		return { message: "Created new Cycle and 16 Sessions", success: true };
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			console.error("Validation error:", error.errors);
