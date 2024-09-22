@@ -34,11 +34,16 @@ const config: Config = {
 					base: "#222",
 					default: "#303030",
 					strong: "#FAFAFA",
+					success: {
+						default: "#1b3819",
+						strong: "#1ab777",
+					},
 				},
 				border: {
 					default: "#414141",
 					semibold: "#CCCCCC",
 					strong: "#FAFAFA",
+					success: "#044403",
 				},
 				unused: {
 					inset: "#232329",

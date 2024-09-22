@@ -19,7 +19,7 @@ export default function Input({
 		<div className="relative">
 			<input
 				type={type}
-				className={`bg-bg-base border border-border-default rounded-[0.125rem] min-h-8 px-4 py-4 text-5xl w-full pt-10 ${GeistSans.className} font-semibold tracking-tight [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+				className={`bg-bg-base border border-border-default rounded-[0.125rem] min-h-8 h-[7.25rem] px-4 py-4 text-5xl w-full pt-10 ${GeistSans.className} font-semibold tracking-tight [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 				name={id}
 				id={id}
 				{...props}

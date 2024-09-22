@@ -59,7 +59,7 @@ export async function createNewCycle(
           ${validatedData.deadlift}, 
           ${validatedData.overheadPress}, 
           false
-        )
+      )
         RETURNING cycle_id
       `;
 

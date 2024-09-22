@@ -1,5 +1,3 @@
-// app/powerlifting/new-cycle/loading.tsx
-
 export default function Loading() {
 	return (
 		<div className="flex flex-col gap-6">

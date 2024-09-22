@@ -2,7 +2,7 @@
 
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useCallback, useTransition, useState } from "react";
 import NumberInput from "../base/NumberInput";
 import { createNewCycle } from "@/app/actions";
 import Button from "@/app/components/base/Button";
@@ -13,16 +13,33 @@ export default function NewCycleForm() {
 	const [state, formAction] = useFormState(createNewCycle, initialState);
 	const router = useRouter();
 
+	const [isPending, startTransition] = useTransition();
+	const [isCompleted, setIsCompleted] = useState(false);
+
+	const handleSubmit = useCallback(
+		(formData: FormData) => {
+			formAction(formData);
+		},
+		[formAction]
+	);
+
 	useEffect(() => {
 		if (state.success) {
-			router.push("/powerlifting");
+			setIsCompleted(true);
+			const delay = setTimeout(() => {
+				startTransition(() => {
+					router.push("/powerlifting");
+				});
+			}, 750);
+
+			return () => clearTimeout(delay);
 		}
-	}, [state.success, router]);
+	}, [state, router]);
 
 	return (
 		<>
 			<form
-				action={formAction}
+				action={handleSubmit}
 				id="new-cycle"
 				className="flex flex-col gap-4 pb-24"
 			>
@@ -39,7 +56,10 @@ export default function NewCycleForm() {
 					<Button
 						label="Create cycle"
 						loading="Submitting..."
+						completed="Submitted"
 						className="w-full"
+						disabled={isPending || isCompleted}
+						isCompleted={isCompleted}
 					/>
 				</div>
 			</form>
