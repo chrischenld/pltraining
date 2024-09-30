@@ -16,8 +16,12 @@ export default function FormLayout({
 }>) {
 	return (
 		<main className="flex flex-col">
-			<header>
-				<Link href="/powerlifting">Back</Link>
+			<header className="flex flex-row gap-2 text-fg-disabled">
+				<Link href="/">Home</Link>
+				<p>/</p>
+				<Link href="/powerlifting">PL</Link>
+				<p>/</p>
+				<p className="text-fg-default">New Session</p>
 			</header>
 			<section className="flex flex-col px-4 py-8 gap-4">{children}</section>
 		</main>

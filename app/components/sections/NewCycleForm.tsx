@@ -30,7 +30,7 @@ export default function NewCycleForm() {
 				startTransition(() => {
 					router.push("/powerlifting");
 				});
-			}, 750);
+			}, 250);
 
 			return () => clearTimeout(delay);
 		}
