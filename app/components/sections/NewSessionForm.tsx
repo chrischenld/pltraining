@@ -1,16 +1,18 @@
 "use client";
 
-export default function NewSessionForm() {
+import { Session } from "@/app/types";
+
+interface NewSessionFormProps {
+	sessionData: Session;
+}
+
+export default function NewSessionForm({ sessionData }: NewSessionFormProps) {
+	// Use sessionData to pre-fill the form
 	return (
-		<>
-			<form id="new-session" className="flex flex-col gap-4 pb-24">
-				{/* {state.message && !state.success && (
-					<p className={state.success ? "text-fg-success" : "text-fg-danger"}>
-						{state.message}
-					</p>
-				)} */}
-				<p>test</p>
-			</form>
-		</>
+		<form>
+			{/* Your form fields here */}
+			<p>Session ID: {sessionData.session_id}</p>
+			{/* ... */}
+		</form>
 	);
 }
