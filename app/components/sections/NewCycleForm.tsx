@@ -41,18 +41,43 @@ export default function NewCycleForm() {
 			<form
 				action={handleSubmit}
 				id="new-cycle"
-				className="flex flex-col gap-4 pb-24"
+				className="grid grid-cols-subgrid col-span-full"
 			>
 				{state.message && !state.success && (
-					<p className={state.success ? "text-fg-success" : "text-fg-danger"}>
+					<p
+						className={`col-span-full ${
+							state.success ? "text-fg-success" : "text-fg-danger"
+						}`}
+					>
 						{state.message}
 					</p>
 				)}
-				<NumberInput label="Squat" id="squat" defaultValue={315} min={0} />
-				<NumberInput label="Bench" id="bench" min={0} />
-				<NumberInput label="Deadlift" id="deadlift" min={0} />
-				<NumberInput label="Overhead Press" id="overheadPress" min={0} />
-				<div className="pt-5 pb-6 px-4 fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
+				<NumberInput
+					label="Squat"
+					id="squat"
+					defaultValue={315}
+					min={0}
+					className="grid grid-cols-subgrid col-span-full"
+				/>
+				<NumberInput
+					label="Bench"
+					id="bench"
+					min={0}
+					className="grid grid-cols-subgrid col-span-full"
+				/>
+				<NumberInput
+					label="Deadlift"
+					id="deadlift"
+					min={0}
+					className="grid grid-cols-subgrid col-span-full"
+				/>
+				<NumberInput
+					label="Overhead Press"
+					id="overheadPress"
+					min={0}
+					className="grid grid-cols-subgrid col-span-full"
+				/>
+				<div className="grid grid-cols-subgrid col-span-full pt-5 pb-6 px-4 fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
 					<Button
 						label="Create cycle"
 						loading="Submitting..."

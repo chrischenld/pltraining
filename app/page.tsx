@@ -1,8 +1,5 @@
 import Link from "next/link";
 import { sql } from "@vercel/postgres";
-// import AddForm from "../testing/AddForm";
-// import DeleteForm from "../testing/DeleteForm";
-// import CreateRows from "./CreateRows";
 
 export default async function Home() {
 	return (
@@ -16,20 +13,6 @@ export default async function Home() {
 				<p className="text-fg-muted">Calisthenics</p>
 				Coming soon
 			</Link>
-			{/* <Link href="/new-entry">new entry</Link>
-			<CreateRows />
-			<AddForm />
-			<ul>
-				{todos.map((todo) => (
-					<li
-						key={todo.id}
-						className="w-full flex flex-row items-center justify-between py-4 border-b border-neutral-800"
-					>
-						{todo.text}
-						<DeleteForm id={todo.id} todo={todo.text} />
-					</li>
-				))}
-			</ul> */}
 		</main>
 	);
 }

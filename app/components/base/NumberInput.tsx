@@ -8,6 +8,11 @@ interface NumberInputProps {
 	defaultValue?: number;
 	min?: number;
 	max?: number;
+	className?: string;
+	required?: boolean;
+	isInvalid?: boolean;
+	errorMessage?: string;
+	[key: string]: any;
 }
 
 export default function NumberInput({
@@ -16,6 +21,10 @@ export default function NumberInput({
 	defaultValue,
 	min,
 	max,
+	className,
+	required,
+	isInvalid,
+	errorMessage,
 	...props
 }: NumberInputProps): JSX.Element {
 	return (
@@ -27,6 +36,12 @@ export default function NumberInput({
 			min={min}
 			max={max}
 			pattern="[0-9]*"
+			className={className}
+			required={required}
+			aria-required={required}
+			isInvalid={isInvalid}
+			aria-invalid={isInvalid}
+			errorMessage={errorMessage}
 			{...props}
 		/>
 	);

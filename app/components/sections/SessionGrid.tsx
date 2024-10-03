@@ -2,19 +2,20 @@
 
 import React, { useState, useEffect } from "react";
 import SessionBlock from "../compositions/SessionBlock";
-import { Session } from "@/app/types";
-import { LiftType } from "@/app/types";
 import Button from "@/app/components/base/Button";
+import { Session } from "@/app/types";
 import { padSessionId } from "@/app/util";
 
 interface SessionGridProps {
 	sessions: Session[];
 	isNewCyclePrompt?: boolean;
+	gridSpanClassName?: string;
 }
 
 export default function SessionGrid({
 	sessions,
 	isNewCyclePrompt = false,
+	gridSpanClassName,
 }: SessionGridProps) {
 	const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
 		null
@@ -50,8 +51,12 @@ export default function SessionGrid({
 		: "Select a Session";
 
 	return (
-		<form action="/powerlifting/new-session" method="get">
-			<div className="grid grid-cols-4 gap-4 pb-24">
+		<form
+			action="/powerlifting/new-session"
+			method="get"
+			className="grid grid-cols-subgrid col-span-full"
+		>
+			<div className="grid grid-cols-subgrid col-span-full pb-24">
 				{sessions.map((session) => (
 					<SessionBlock
 						key={session.session_id}
@@ -60,6 +65,7 @@ export default function SessionGrid({
 						isSelected={selectedSessionId === session.session_id}
 						onSelect={handleSessionSelect}
 						isNewCyclePrompt={isNewCyclePrompt}
+						className={gridSpanClassName}
 					/>
 				))}
 			</div>

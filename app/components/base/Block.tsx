@@ -7,6 +7,7 @@ interface BlockProps {
 	variant?: BlockVariant;
 	onSelect?: () => void;
 	isSelectable?: boolean;
+	className?: string;
 }
 
 export default function Block({
@@ -14,6 +15,7 @@ export default function Block({
 	variant = "default",
 	onSelect,
 	isSelectable = false,
+	className,
 }: BlockProps) {
 	const variants = {
 		default: "border-border-default bg-bg-base",
@@ -30,12 +32,15 @@ export default function Block({
 
 	return (
 		<div
-			className={`flex flex-col h-16 w-16 border align-items px-2 py-3 tracking-wider ${
-				variants[variant]
-			} ${isSelectable ? "cursor-pointer" : ""}`}
+			className={`grid border p-2 border-gray-3
+			} ${isSelectable ? "cursor-pointer" : ""} ${className}`}
 			onClick={handleClick}
 		>
-			{children}
+			<div
+				className={`grid grid-rows-8 aspect-square rounded-[0.125rem] border align-items p-2 tracking-wider ${variants[variant]} ${className}`}
+			>
+				{children}
+			</div>
 		</div>
 	);
 }

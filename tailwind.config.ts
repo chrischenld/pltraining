@@ -41,6 +41,7 @@ const config: Config = {
 				},
 				border: {
 					default: "#414141",
+					muted: "#303030",
 					semibold: "#CCCCCC",
 					strong: "#FAFAFA",
 					success: "#044403",
@@ -51,6 +52,20 @@ const config: Config = {
 					border: "#29292F",
 					muted: "#313139",
 					accent: "#8E60BB",
+				},
+				gray: {
+					1: "#111111",
+					2: "#191919",
+					3: "#222222",
+					4: "#2a2a2a",
+					5: "#313131",
+					6: "#3a3a3a",
+					7: "#484848",
+					8: "#606060",
+					9: "#6e6e6e",
+					10: "#7b7b7b",
+					11: "#b4b4b4",
+					12: "#eeeeee",
 				},
 			},
 			height: {
@@ -77,7 +92,7 @@ const config: Config = {
 			sm: "300px",
 			// => @media (min-width: 640px) { ... }
 
-			md: "496px",
+			md: "796px",
 			// => @media (min-width: 768px) { ... }
 
 			lg: "1072px",

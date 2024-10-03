@@ -16,6 +16,7 @@ interface SessionBlockProps {
 	isSelected: boolean;
 	onSelect: (sessionId: number) => void;
 	isNewCyclePrompt?: boolean;
+	className?: string;
 }
 
 export default function SessionBlock({
@@ -24,6 +25,7 @@ export default function SessionBlock({
 	isSelected,
 	onSelect,
 	isNewCyclePrompt = false,
+	className,
 }: SessionBlockProps) {
 	const { variant, textClass } = getSessionStatus(
 		session,
@@ -42,6 +44,7 @@ export default function SessionBlock({
 			variant={isSelected ? "selected" : variant}
 			onSelect={handleSelect}
 			isSelectable={!session.completed && !isNewCyclePrompt}
+			className={className}
 		>
 			<p className={textClass}>{padSessionId(session.session_number)}</p>
 			<p>

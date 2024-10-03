@@ -15,15 +15,15 @@ export default function FormLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<main className="flex flex-col">
+		<main className="bg-gray-2">
 			<header className="flex flex-row gap-2 text-fg-disabled">
 				<Link href="/">Home</Link>
 				<p>/</p>
 				<Link href="/powerlifting">PL</Link>
 				<p>/</p>
-				<p className="text-fg-default">New Cycle</p>
+				<p className="text-fg-default">Grid Test</p>
 			</header>
-			<section className="flex flex-col px-4 py-8 gap-4">{children}</section>
+			<section className="col px-3 py-3">{children}</section>
 		</main>
 	);
 }

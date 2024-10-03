@@ -7,46 +7,36 @@ import { Cycle, Session } from "@/app/types";
 const CycleTitle = ({ cycle }: { cycle: Cycle | null }) => {
 	if (!cycle) return <p>No Cycle</p>;
 	return (
-		<p className={cycle.completed ? "text-fg-success" : ""}>
+		<p className={`col-span-full ${cycle.completed ? "text-fg-success" : ""}`}>
 			Cycle {padSessionId(cycle.cycle_id)}
 		</p>
 	);
 };
 
-const NewCyclePrompt = ({
-	cycle,
-	sessions,
-}: {
-	cycle: Cycle | null;
-	sessions: Session[];
-}) => {
+const NewCyclePrompt = ({ sessions }: { sessions: Session[] }) => {
 	return (
-		<div className="flex flex-col gap-8">
-			<CycleTitle cycle={cycle} />
-			<SessionGrid sessions={sessions} isNewCyclePrompt={true} />
-			<footer className="fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
+		<>
+			<div className="grid col-span-full grid-cols-subgrid ">
+				<SessionGrid sessions={sessions} isNewCyclePrompt={true} />
+			</div>
+			<footer className="fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-border-default">
 				<Link href="/powerlifting/new-cycle">
 					<p className=" h-16 flex items-center justify-center text-fg-default">
 						Start new cycle →
 					</p>
 				</Link>
 			</footer>
-		</div>
+		</>
 	);
 };
 
-const NextSessionPrompt = ({
-	cycle,
-	sessions,
-}: {
-	cycle: Cycle | null;
-	sessions: Session[];
-}) => {
+const NextSessionPrompt = ({ sessions }: { sessions: Session[] }) => {
 	return (
-		<div className="flex flex-col gap-8">
-			<CycleTitle cycle={cycle} />
-			<SessionGrid sessions={sessions} />
-		</div>
+		<>
+			<div className="grid col-span-full grid-cols-subgrid ">
+				<SessionGrid sessions={sessions} gridSpanClassName="col-span-4" />
+			</div>
+		</>
 	);
 };
 
@@ -80,17 +70,18 @@ export default async function Page() {
 	}
 
 	return (
-		<main className="flex flex-col px-4 py-8 gap-8">
-			<h2>Powerlifting</h2>
-			<div className="flex">
-				{!lastCycle || lastCycle.completed ? (
-					<NewCyclePrompt cycle={lastCycle} sessions={sessionDataRows} />
-				) : sessionDataRows.length === 0 ? (
-					<NoSessionsError />
-				) : (
-					<NextSessionPrompt cycle={lastCycle} sessions={sessionDataRows} />
-				)}
+		<div className="grid grid-cols-subgrid col-span-full grid-rows-[auto_1fr] gap-y-4">
+			<div className="grid grid-cols-subgrid col-span-full">
+				<h1 className="col-span-full">Powerlifting</h1>
+				<CycleTitle cycle={lastCycle} />
 			</div>
-		</main>
+			{!lastCycle || lastCycle.completed ? (
+				<NewCyclePrompt sessions={sessionDataRows} />
+			) : sessionDataRows.length === 0 ? (
+				<NoSessionsError />
+			) : (
+				<NextSessionPrompt sessions={sessionDataRows} />
+			)}
+		</div>
 	);
 }

@@ -11,7 +11,7 @@
 	--foreground-rgb: 255, 255, 255;
 	--background-start-rgb: 23, 23, 23;
 	--background-end-rgb: 28, 28, 28;
-	--background-rgb: 34, 34, 34;
+	--background-rgb: 25, 25, 25;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -22,18 +22,26 @@
   }
 } */
 
-html {
-	scroll-behavior: smooth;
+/* Reset and base styles */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: reduce) {
-	html {
-		--duration: 0;
-		scroll-behavior: auto;
-	}
+html,
+body {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+main {
+	width: 100%;
 }
 
 body {
+	min-height: 100vh;
 	font-family: var(--font-fragment-mono), monospace;
 	color: rgb(var(--foreground-rgb));
 	background: rgb(var(--background-rgb));
@@ -46,11 +54,14 @@ body {
 }
 
 header {
-	@apply flex items-center border-b border-border-default h-16 p-4;
+	@apply flex items-center border-b border-border-default h-16 px-3 py-2;
 }
 
 h1 {
 	font-size: 1.5rem;
+	white-space: nowrap; /* Prevent line breaks */
+	overflow: hidden; /* Hide overflow if any */
+	text-overflow: ellipsis; /* Show ellipsis for overflowing text */
 }
 
 h2 {
@@ -65,7 +76,6 @@ h5,
 h6 {
 	color: #f5f5f5;
 	letter-spacing: 0.2rem;
-	width: 100%;
 	line-height: 1.8;
 }
 
@@ -114,4 +124,23 @@ footer {
 
 .kerned {
 	font-kerning: auto;
+}
+
+.GridLayout {
+	display: grid;
+	grid-template-columns: repeat(8, minmax(0, 1fr));
+	padding: 0.75rem;
+}
+
+@media (min-width: 768px) {
+	.GridLayout {
+		grid-template-columns: repeat(24, minmax(0, 1fr));
+	}
+}
+
+.GridLayout > * {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: subgrid;
+	min-width: 0; /* Allow grid items to shrink below their minimum content size */
 }
