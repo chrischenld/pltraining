@@ -15,6 +15,24 @@ export interface Session {
 	date: Date | null;
 }
 
+export interface Set {
+	set_id: number;
+	session_id: number;
+	lift_type: "PRIMARY" | "SECONDARY";
+	set_number: number;
+	weight_percentage_programmed: number;
+	reps_programmed: number;
+	weight_programmed: number | null;
+	reps_performed: number | null;
+	weight_performed: number | null;
+	is_joker_set: boolean;
+	success: boolean | null;
+	created_at: Date;
+	updated_at: Date;
+	rate_perceived_exertion: number | null;
+	notes: string | null;
+}
+
 export enum LiftType {
 	SQUAT = "SQUAT",
 	BENCH = "BENCH",
