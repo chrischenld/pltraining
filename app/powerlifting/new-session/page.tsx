@@ -18,9 +18,17 @@ export default async function Page({
 	const sessionId = searchParams.sessionId as string;
 
 	return (
-		<div className="flex flex-col gap-6">
-			<h1>New Session</h1>
-			<Suspense fallback={<div>Loading...</div>}>
+		<div className="grid grid-cols-subgrid col-span-full grid-rows-[auto_1fr] gap-y-4">
+			<div className="grid grid-cols-subgrid col-span-full">
+				<h1 className="col-span-full">New Session</h1>
+			</div>
+			<Suspense
+				fallback={
+					<div>
+						<p>Loading...</p>
+					</div>
+				}
+			>
 				{sessionId ? (
 					<SessionDataWrapper sessionId={sessionId} />
 				) : (

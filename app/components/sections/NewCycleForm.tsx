@@ -41,7 +41,7 @@ export default function NewCycleForm() {
 			<form
 				action={handleSubmit}
 				id="new-cycle"
-				className="grid grid-cols-subgrid col-span-full"
+				className="grid grid-cols-subgrid col-span-full pb-20"
 			>
 				{state.message && !state.success && (
 					<p
@@ -77,7 +77,7 @@ export default function NewCycleForm() {
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
 				/>
-				<div className="grid grid-cols-subgrid col-span-full pt-5 pb-6 px-4 fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
+				<div className="grid grid-cols-subgrid col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 					<Button
 						label="Create cycle"
 						loading="Submitting..."

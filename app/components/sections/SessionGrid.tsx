@@ -70,7 +70,7 @@ export default function SessionGrid({
 				))}
 			</div>
 			<input type="hidden" name="sessionId" value={selectedSessionId || ""} />
-			<div className="pt-5 pb-6 px-4 fixed bottom-0 left-0 right-0 bg-bg-base border-t border-t-border-default">
+			<div className="p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 				<Button
 					label={buttonLabel}
 					loading="Loading..."

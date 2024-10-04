@@ -9,9 +9,9 @@ interface NewSessionFormProps {
 export default function NewSessionForm({ sessionData }: NewSessionFormProps) {
 	// Use sessionData to pre-fill the form
 	return (
-		<form>
+		<form className="grid grid-cols-subgrid col-span-full">
 			{/* Your form fields here */}
-			<p>Session ID: {sessionData.session_id}</p>
+			<p className="col-span-full">Session ID: {sessionData.session_id}</p>
 			{/* ... */}
 		</form>
 	);

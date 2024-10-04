@@ -8,6 +8,7 @@ import { Fragment } from "react";
 const pathNameMap: Record<string, string> = {
 	powerlifting: "PL",
 	"new-cycle": "New Cycle",
+	"new-session": "New Session",
 	// Add more mappings as needed
 };
 
