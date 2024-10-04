@@ -89,10 +89,10 @@ const config: Config = {
 			},
 		},
 		screens: {
-			sm: "300px",
-			// => @media (min-width: 640px) { ... }
+			sm: "540px",
+			// => @media (min-width: 540px) { ... }
 
-			md: "796px",
+			md: "768px",
 			// => @media (min-width: 768px) { ... }
 
 			lg: "1072px",

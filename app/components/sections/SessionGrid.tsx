@@ -57,17 +57,38 @@ export default function SessionGrid({
 			className="grid grid-cols-subgrid col-span-full"
 		>
 			<div className="grid grid-cols-subgrid col-span-full pb-24">
-				{sessions.map((session) => (
-					<SessionBlock
-						key={session.session_id}
-						session={session}
-						sessions={sessions}
-						isSelected={selectedSessionId === session.session_id}
-						onSelect={handleSessionSelect}
-						isNewCyclePrompt={isNewCyclePrompt}
-						className={gridSpanClassName}
-					/>
-				))}
+				{sessions.map((session, index) => {
+					let borderClass = index === 0 ? "border" : "border border-l-0";
+
+					if (index >= 2) {
+						borderClass += " border-t-0";
+					}
+
+					if (index >= 2 && index <= 5) {
+						borderClass += " md:border-t";
+					}
+
+					if (index === 6 || index === 12) {
+						borderClass += " md:border-l";
+					}
+
+					if (index >= 6) {
+						borderClass += " md:border-t-0";
+					}
+
+					return (
+						<SessionBlock
+							key={session.session_id}
+							session={session}
+							sessions={sessions}
+							isSelected={selectedSessionId === session.session_id}
+							onSelect={handleSessionSelect}
+							isNewCyclePrompt={isNewCyclePrompt}
+							className={gridSpanClassName}
+							outerClassName={borderClass}
+						/>
+					);
+				})}
 			</div>
 			<input type="hidden" name="sessionId" value={selectedSessionId || ""} />
 			<div className="p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">

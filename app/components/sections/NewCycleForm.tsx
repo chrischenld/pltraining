@@ -64,18 +64,21 @@ export default function NewCycleForm() {
 					id="bench"
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
+					outerClassName="border-t-0"
 				/>
 				<NumberInput
 					label="Deadlift"
 					id="deadlift"
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
+					outerClassName="border-t-0"
 				/>
 				<NumberInput
 					label="Overhead Press"
 					id="overheadPress"
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
+					outerClassName="border-t-0"
 				/>
 				<div className="grid grid-cols-subgrid col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 					<Button

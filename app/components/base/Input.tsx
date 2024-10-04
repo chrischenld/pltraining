@@ -7,6 +7,7 @@ interface InputProps {
 	type: "text" | "number";
 	id?: string;
 	className?: string;
+	outerClassName?: string;
 	required?: boolean;
 	isInvalid?: boolean;
 	errorMessage?: string;
@@ -18,6 +19,7 @@ export default function Input({
 	label,
 	id,
 	className,
+	outerClassName,
 	required,
 	isInvalid,
 	errorMessage,
@@ -26,7 +28,9 @@ export default function Input({
 	const errorId = `${id}-error`;
 
 	return (
-		<div className="grid grid-cols-subgrid col-span-full p-2 border border-gray-3">
+		<div
+			className={`grid grid-cols-subgrid col-span-full p-2 border border-gray-3 ${outerClassName}`}
+		>
 			<div className={`relative ${className}`}>
 				<input
 					type={type}
