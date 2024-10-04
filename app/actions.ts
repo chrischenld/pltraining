@@ -187,13 +187,23 @@ async function createSetsForLift(
 	}
 ) {
 	const { setCount, reps, percentages } = details;
-	const trainingMax =
-		trainingMaxes[liftType.toLowerCase() as keyof typeof trainingMaxes];
+	const liftTypeKey =
+		liftType === "OVERHEAD_PRESS" ? "overheadPress" : liftType.toLowerCase();
+	const selectedTrainingMax =
+		trainingMaxes[liftTypeKey as keyof typeof trainingMaxes];
+
+	if (selectedTrainingMax === undefined) {
+		console.error(`Training max not found for lift type: ${liftType}`);
+		console.error("Available training maxes:", trainingMaxes);
+		throw new Error(`Training max not found for lift type: ${liftType}`);
+	}
 
 	for (let i = 0; i < setCount; i++) {
 		const weightPercentage = percentages[i];
 		const repsProgram = reps[i];
-		const weightProgrammed = Math.round((trainingMax * weightPercentage) / 100);
+		const weightProgrammed = Math.round(
+			(selectedTrainingMax * weightPercentage) / 100
+		);
 
 		await sql`
       INSERT INTO Sets (
@@ -348,60 +358,3 @@ export async function setRepsPerformed(prevState: any, formData: FormData) {
 		return { message: `Failed to assign date` };
 	}
 }
-
-// export async function createTodo(
-// 	prevState: { message: string; resetKey?: string },
-// 	formData: FormData
-// ) {
-// 	const schema = z.object({
-// 		todo: z.string().min(1),
-// 	});
-// 	const parse = schema.safeParse({
-// 		todo: formData.get("todo"),
-// 	});
-
-// 	if (!parse.success) {
-// 		return { message: "failed to create todo" };
-// 	}
-
-// 	const data = parse.data;
-
-// 	try {
-// 		await sql`
-//         INSERT INTO todos (text)
-//         VALUES (${data.todo})
-//         `;
-
-// 		revalidatePath("/");
-// 		return {
-// 			message: `Added todo ${data.todo}`,
-// 			resetKey: Date.now().toString(),
-// 		};
-// 	} catch (e) {
-// 		return { message: `Failed to create todo` };
-// 	}
-// }
-
-// export async function deleteTodo(prevState: any, formData: FormData) {
-// 	const schema = z.object({
-// 		id: z.string().min(1),
-// 		todo: z.string().min(1),
-// 	});
-
-// 	const data = schema.parse({
-// 		id: formData.get("id"),
-// 		todo: formData.get("todo"),
-// 	});
-
-// 	try {
-// 		await sql`
-//             DELETE FROM todos
-//             WHERE id = ${data.id};
-//         `;
-
-// 		revalidatePath("/");
-// 		return { message: `deleted todo ${data.todo}` };
-// 	} catch (e) {
-// 		return { message: `failed to delete` };
-// 	}
-// }

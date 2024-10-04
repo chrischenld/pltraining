@@ -11,9 +11,7 @@ const SetSchema = z.object({
 	set_number: z.coerce.number(),
 	weight_percentage_programmed: z.coerce.number(),
 	reps_programmed: z.coerce.number(),
-	weight_programmed: z
-		.union([z.coerce.number(), z.literal("NaN")])
-		.transform((val) => (val === "NaN" ? null : val)),
+	weight_programmed: z.coerce.number(),
 	reps_performed: z.coerce.number().nullable(),
 	weight_performed: z.coerce.number().nullable(),
 	is_joker_set: z.coerce.boolean(),
@@ -36,11 +34,11 @@ async function fetchSetData(sessionId: string): Promise<Set[]> {
 		SELECT * FROM Sets WHERE session_id = ${sessionId}
 	`;
 
-	console.log("Raw set data:", setData.rows);
+	// console.log("Raw set data:", setData.rows);
 
 	return setData.rows.map((row) => {
 		const parsedRow = SetSchema.parse(row);
-		console.log("Parsed row:", parsedRow);
+		// console.log("Parsed row:", parsedRow);
 		return parsedRow;
 	});
 }
