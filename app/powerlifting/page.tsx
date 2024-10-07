@@ -3,9 +3,10 @@ import { sql } from "@vercel/postgres";
 import SessionGrid from "../components/sections/SessionGrid";
 import { padSessionId } from "../util";
 import { Cycle, Session } from "@/app/types";
+import Button from "../components/base/Button";
 
 const CycleTitle = ({ cycle }: { cycle: Cycle | null }) => {
-	if (!cycle) return <p>No Cycle</p>;
+	if (!cycle) return <p className="col-span-full">No Cycle</p>;
 	return (
 		<p className={`col-span-full ${cycle.completed ? "text-fg-success" : ""}`}>
 			Cycle {padSessionId(cycle.cycle_id)}
@@ -19,11 +20,12 @@ const NewCyclePrompt = ({ sessions }: { sessions: Session[] }) => {
 			<div className="grid col-span-full grid-cols-subgrid ">
 				<SessionGrid sessions={sessions} isNewCyclePrompt={true} />
 			</div>
-			<footer className="fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-border-default">
+			<footer className="grid grid-cols-subgrid col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 				<Link href="/powerlifting/new-cycle">
-					<p className=" h-16 flex items-center justify-center text-fg-default">
+					{/* <p className=" h-12 flex items-center justify-center text-fg-default">
 						Start new cycle →
-					</p>
+					</p> */}
+					<Button className="w-full" label="Start new cycle →" />
 				</Link>
 			</footer>
 		</>

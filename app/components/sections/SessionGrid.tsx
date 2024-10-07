@@ -58,7 +58,11 @@ export default function SessionGrid({
 		>
 			<div className="grid grid-cols-subgrid col-span-full pb-24">
 				{sessions.map((session, index) => {
-					let borderClass = index === 0 ? "border" : "border border-l-0";
+					let borderClass = "border";
+
+					if (index % 2 !== 0) {
+						borderClass += " border-l-0";
+					}
 
 					if (index >= 2) {
 						borderClass += " border-t-0";
@@ -74,6 +78,10 @@ export default function SessionGrid({
 
 					if (index >= 6) {
 						borderClass += " md:border-t-0";
+					}
+
+					if ([2, 4, 8, 10, 14].includes(index)) {
+						borderClass += " md:border-l-0";
 					}
 
 					return (

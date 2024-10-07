@@ -3,6 +3,7 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { Set } from "@/app/types";
 
 const CycleSchema = z.object({
 	squat: z.number().positive(),
@@ -237,124 +238,181 @@ async function createSetsForLift(
 	}
 }
 
-//
-//
-//
-//
+export const submitSet = async (prevState: any, formData: FormData) => {
+	const setId = formData.get("setId");
+	const weightPerformed = Number(formData.get("weightPerformed"));
+	const repsPerformed = Number(formData.get("repsPerformed"));
+	const weightProgrammed = Number(formData.get("weightProgrammed"));
+	const repsProgrammed = Number(formData.get("repsProgrammed"));
 
-export async function createRows(prevState: any, formData: FormData) {
-	try {
-		await sql`
-            INSERT INTO Sets (set_id, lift_type, set_count, reps_programmed, weight_programmed_percentage, weight_programmed)
-            SELECT
-                generate_series AS set_id,
-                'SQUAT' AS lift_type,
-                generate_series AS set_count,
-                5 AS reps_programmed,
-                CASE
-                    WHEN generate_series = 1 THEN 0.70
-                    WHEN generate_series = 2 THEN 0.80
-                    WHEN generate_series = 3 THEN 0.90
-                    WHEN generate_series = 4 THEN 0.80
-                    WHEN generate_series = 5 THEN 0.70
-                END AS weight_programmed_percentage,
-                CASE
-                    WHEN generate_series = 1 THEN 0.70 * 350
-                    WHEN generate_series = 2 THEN 0.80 * 350
-                    WHEN generate_series = 3 THEN 0.90 * 350
-                    WHEN generate_series = 4 THEN 0.80 * 350
-                    WHEN generate_series = 5 THEN 0.70 * 350
-                END AS weight_programmed
-            FROM generate_series(1, 5)
-            
-            UNION ALL
-            
-            SELECT
-                generate_series + 5 AS set_id,  -- Offset set_id by 5 for the second set of rows
-                'DEADLIFT' AS lift_type,
-                generate_series AS set_count,
-                5 AS reps_programmed,
-                CASE
-                    WHEN generate_series = 1 THEN 0.70
-                    WHEN generate_series = 2 THEN 0.80
-                    WHEN generate_series = 3 THEN 0.90
-                    WHEN generate_series = 4 THEN 0.80
-                    WHEN generate_series = 5 THEN 0.70
-                END AS weight_programmed_percentage,
-                CASE
-                    WHEN generate_series = 1 THEN 0.70 * 445
-                    WHEN generate_series = 2 THEN 0.80 * 445
-                    WHEN generate_series = 3 THEN 0.90 * 445
-                    WHEN generate_series = 4 THEN 0.80 * 445
-                    WHEN generate_series = 5 THEN 0.70 * 445
-                END AS weight_programmed
-            FROM generate_series(1, 5);
-        `;
+	console.log(`submitSet: Received set_id ${setId}`);
+	console.log(
+		`submitSet: Weight performed ${weightPerformed}, programmed ${weightProgrammed}`
+	);
+	console.log(
+		`submitSet: Reps performed ${repsPerformed}, programmed ${repsProgrammed}`
+	);
 
-		revalidatePath("/");
-		return { message: `added rows` };
-	} catch (e) {
-		return { message: `failed` };
+	if (
+		!setId ||
+		isNaN(weightPerformed) ||
+		isNaN(repsPerformed) ||
+		isNaN(weightProgrammed) ||
+		isNaN(repsProgrammed)
+	) {
+		console.log("submitSet: Missing or invalid required fields");
+		return { message: "Missing or invalid required fields", success: false };
 	}
-}
 
-export async function markRowsWithDate(prevState: any, formData: FormData) {
-	const date = new Date();
-	let day = date.getDate();
-	let month = date.getMonth() + 1;
-	let year = date.getFullYear();
+	const success =
+		weightPerformed >= weightProgrammed && repsPerformed >= repsProgrammed;
 
-	let currentDate = `${year}.${month}.${day}`;
-
-	const schema = z.object({
-		setId: z.string().min(1),
-	});
-
-	const data = schema.parse({
-		setId: formData.get("setId"),
-	});
+	const setData: Partial<Set> = {
+		set_id: Number(setId),
+		weight_performed: weightPerformed,
+		reps_performed: repsPerformed,
+		updated_at: new Date(),
+		success: success,
+	};
 
 	try {
 		await sql`
-            UPDATE Sets
-            SET date = ${currentDate}
-            WHERE set_id = ${data.setId};
-        `;
+			UPDATE Sets
+			SET 
+				WEIGHT_PERFORMED = ${setData.weight_performed},
+				REPS_PERFORMED = ${setData.reps_performed},
+				UPDATED_AT = CURRENT_TIMESTAMP,
+				SUCCESS = ${setData.success}
+			WHERE SET_ID = ${setData.set_id}
+		`;
 
-		revalidatePath("/");
-		return {
-			message: `Added date ${currentDate} for ${data.setId}`,
-		};
-	} catch (e) {
-		return { message: `Failed to assign date` };
+		// console.log(`submitSet: Successfully updated set_id ${setId}`);
+		revalidatePath("/powerlifting/new-session");
+		return { message: "Set updated successfully", success: true };
+	} catch (error) {
+		console.error("Error updating set:", error);
+		return { message: "Failed to update set", success: false };
 	}
-}
+};
 
-export async function setRepsPerformed(prevState: any, formData: FormData) {
-	console.log(formData);
+//
+//
+//
+//
 
-	const schema = z.object({
-		setId: z.string().min(1),
-		reps: z.string().min(1),
-	});
+// export async function createRows(prevState: any, formData: FormData) {
+// 	try {
+// 		await sql`
+//             INSERT INTO Sets (set_id, lift_type, set_count, reps_programmed, weight_programmed_percentage, weight_programmed)
+//             SELECT
+//                 generate_series AS set_id,
+//                 'SQUAT' AS lift_type,
+//                 generate_series AS set_count,
+//                 5 AS reps_programmed,
+//                 CASE
+//                     WHEN generate_series = 1 THEN 0.70
+//                     WHEN generate_series = 2 THEN 0.80
+//                     WHEN generate_series = 3 THEN 0.90
+//                     WHEN generate_series = 4 THEN 0.80
+//                     WHEN generate_series = 5 THEN 0.70
+//                 END AS weight_programmed_percentage,
+//                 CASE
+//                     WHEN generate_series = 1 THEN 0.70 * 350
+//                     WHEN generate_series = 2 THEN 0.80 * 350
+//                     WHEN generate_series = 3 THEN 0.90 * 350
+//                     WHEN generate_series = 4 THEN 0.80 * 350
+//                     WHEN generate_series = 5 THEN 0.70 * 350
+//                 END AS weight_programmed
+//             FROM generate_series(1, 5)
 
-	const data = schema.parse({
-		setId: formData.get("setId"),
-		reps: formData.get("reps"),
-	});
+//             UNION ALL
 
-	try {
-		await sql`
-            UPDATE Sets
-            SET reps_performed = ${data.reps}
-            WHERE set_id = ${data.setId};
-        `;
+//             SELECT
+//                 generate_series + 5 AS set_id,  -- Offset set_id by 5 for the second set of rows
+//                 'DEADLIFT' AS lift_type,
+//                 generate_series AS set_count,
+//                 5 AS reps_programmed,
+//                 CASE
+//                     WHEN generate_series = 1 THEN 0.70
+//                     WHEN generate_series = 2 THEN 0.80
+//                     WHEN generate_series = 3 THEN 0.90
+//                     WHEN generate_series = 4 THEN 0.80
+//                     WHEN generate_series = 5 THEN 0.70
+//                 END AS weight_programmed_percentage,
+//                 CASE
+//                     WHEN generate_series = 1 THEN 0.70 * 445
+//                     WHEN generate_series = 2 THEN 0.80 * 445
+//                     WHEN generate_series = 3 THEN 0.90 * 445
+//                     WHEN generate_series = 4 THEN 0.80 * 445
+//                     WHEN generate_series = 5 THEN 0.70 * 445
+//                 END AS weight_programmed
+//             FROM generate_series(1, 5);
+//         `;
 
-		revalidatePath("/");
-		return {
-			message: `Added ${data.reps} sets for ${data.setId}`,
-		};
-	} catch (e) {
-		return { message: `Failed to assign date` };
-	}
-}
+// 		revalidatePath("/");
+// 		return { message: `added rows` };
+// 	} catch (e) {
+// 		return { message: `failed` };
+// 	}
+// }
+
+// export async function markRowsWithDate(prevState: any, formData: FormData) {
+// 	const date = new Date();
+// 	let day = date.getDate();
+// 	let month = date.getMonth() + 1;
+// 	let year = date.getFullYear();
+
+// 	let currentDate = `${year}.${month}.${day}`;
+
+// 	const schema = z.object({
+// 		setId: z.string().min(1),
+// 	});
+
+// 	const data = schema.parse({
+// 		setId: formData.get("setId"),
+// 	});
+
+// 	try {
+// 		await sql`
+//             UPDATE Sets
+//             SET date = ${currentDate}
+//             WHERE set_id = ${data.setId};
+//         `;
+
+// 		revalidatePath("/");
+// 		return {
+// 			message: `Added date ${currentDate} for ${data.setId}`,
+// 		};
+// 	} catch (e) {
+// 		return { message: `Failed to assign date` };
+// 	}
+// }
+
+// export async function setRepsPerformed(prevState: any, formData: FormData) {
+// 	console.log(formData);
+
+// 	const schema = z.object({
+// 		setId: z.string().min(1),
+// 		reps: z.string().min(1),
+// 	});
+
+// 	const data = schema.parse({
+// 		setId: formData.get("setId"),
+// 		reps: formData.get("reps"),
+// 	});
+
+// 	try {
+// 		await sql`
+//             UPDATE Sets
+//             SET reps_performed = ${data.reps}
+//             WHERE set_id = ${data.setId};
+//         `;
+
+// 		revalidatePath("/");
+// 		return {
+// 			message: `Added ${data.reps} sets for ${data.setId}`,
+// 		};
+// 	} catch (e) {
+// 		return { message: `Failed to assign date` };
+// 	}
+// }

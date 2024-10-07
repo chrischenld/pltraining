@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { sql } from "@vercel/postgres";
 import { z } from "zod";
 import { Session, Set } from "@/app/types";
@@ -34,11 +33,8 @@ async function fetchSetData(sessionId: string): Promise<Set[]> {
 		SELECT * FROM Sets WHERE session_id = ${sessionId}
 	`;
 
-	// console.log("Raw set data:", setData.rows);
-
 	return setData.rows.map((row) => {
 		const parsedRow = SetSchema.parse(row);
-		// console.log("Parsed row:", parsedRow);
 		return parsedRow;
 	});
 }
@@ -50,30 +46,26 @@ export default async function Page({
 }) {
 	const sessionId = searchParams.sessionId as string;
 
+	if (!sessionId) {
+		return (
+			<div className="grid grid-cols-subgrid col-span-full grid-rows-[auto_1fr] gap-y-4">
+				<div className="grid grid-cols-subgrid col-span-full">
+					<h1 className="col-span-full">New Session</h1>
+				</div>
+				<p>No session selected. Please go back and select a session.</p>
+			</div>
+		);
+	}
+
+	const sessionData = await fetchSessionData(sessionId);
+	const setData = await fetchSetData(sessionId);
+
 	return (
 		<div className="grid grid-cols-subgrid col-span-full grid-rows-[auto_1fr] gap-y-4">
 			<div className="grid grid-cols-subgrid col-span-full">
 				<h1 className="col-span-full">New Session</h1>
 			</div>
-			<Suspense
-				fallback={
-					<div>
-						<p>Loading...</p>
-					</div>
-				}
-			>
-				{sessionId ? (
-					<SessionDataWrapper sessionId={sessionId} />
-				) : (
-					<p>No session selected. Please go back and select a session.</p>
-				)}
-			</Suspense>
+			<NewSessionForm sessionData={sessionData} setData={setData} />
 		</div>
 	);
-}
-
-async function SessionDataWrapper({ sessionId }: { sessionId: string }) {
-	const sessionData = await fetchSessionData(sessionId);
-	const setData = await fetchSetData(sessionId);
-	return <NewSessionForm sessionData={sessionData} setData={setData} />;
 }

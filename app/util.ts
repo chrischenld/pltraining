@@ -1,6 +1,7 @@
 import { BlockVariant } from "./components/base/Block";
 import { Session } from "./types";
 import { LiftType } from "./types";
+import { Set } from "@/app/types";
 
 export const getLiftTypeCode = (liftType: LiftType): string => {
 	switch (liftType) {
@@ -55,6 +56,17 @@ export const getSessionStatus = (
 		return { variant: "default", textClass: "" };
 	}
 };
+
+export function getSetStatus(set: Set, isSelected: boolean) {
+	if (set.success) {
+		return { variant: "completed", textClass: "text-fg-default" };
+	}
+	if (isSelected) {
+		return { variant: "selected", textClass: "text-fg-onStrong" };
+	} else {
+		return { variant: "default", textClass: "text-fg-default" };
+	}
+}
 
 // export type FormState = {
 // 	status: "UNSET" | "SUCCESS" | "ERROR";

@@ -22,9 +22,9 @@ export default function Block({
 	paddingSize = "p-2",
 }: BlockProps) {
 	const variants = {
-		default: "border-border-default bg-bg-base",
-		selected: "border-border-strong bg-bg-base",
-		completed: "border-border-default bg-bg-default",
+		default: "border-gray-6 bg-gray-2",
+		selected: "border-border-strong",
+		completed: "border-gray-6 bg-gray-3",
 		empty: "text-fg-disabled border-border-default",
 	};
 

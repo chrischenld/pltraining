@@ -2,7 +2,7 @@ import Block, { BlockVariant } from "@/app/components/base/Block";
 import { Set, LiftType } from "@/app/types";
 import { getSetStatus, getLiftTypeCode } from "@/app/util";
 
-interface SetBlockProps {
+interface JokerSetBlockProps {
 	set: Set;
 	isSelected: boolean;
 	onSelect: () => void;
@@ -12,7 +12,7 @@ interface SetBlockProps {
 	secondaryLiftType: LiftType;
 }
 
-export default function SetBlock({
+export default function JokerSetBlock({
 	set,
 	isSelected,
 	onSelect,
@@ -20,7 +20,7 @@ export default function SetBlock({
 	outerClassName,
 	primaryLiftType,
 	secondaryLiftType,
-}: SetBlockProps) {
+}: JokerSetBlockProps) {
 	const { variant, textClass } = getSetStatus(set, isSelected);
 	const liftType =
 		set.lift_type === "PRIMARY" ? primaryLiftType : secondaryLiftType;
@@ -42,23 +42,13 @@ export default function SetBlock({
 				isSelectable={true}
 				onSelect={onSelect}
 			>
-				<p
-					className={`flex items-center justify-center col-span-2 ${
-						set.success ? "text-fg-success" : "text-fg-default"
-					}`}
-				>
-					{set.reps_programmed}
-				</p>
+				<p className="flex items-center justify-center col-span-2">-</p>
 			</Block>
 			<div className="grid grid-rows-4 col-span-full px-1">
-				<p className={`${set.success ? "text-fg-success" : "text-fg-default"}`}>
-					{liftCode}
-					{set.set_number}
-				</p>
-				<p>{set.weight_programmed}LB</p>
-				<p>{set.reps_programmed}R</p>
-				<p>{set.set_id}</p>
-				{/* <p>{set.weight_percentage_programmed}%</p> */}
+				<p>JKR</p>
+				<p>--</p>
+				<p>--</p>
+				<p>--</p>
 			</div>
 		</div>
 	);
