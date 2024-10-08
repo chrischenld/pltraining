@@ -1,6 +1,11 @@
 import React, { ReactNode } from "react";
 
-export type BlockVariant = "default" | "selected" | "completed" | "empty";
+export type BlockVariant =
+	| "default"
+	| "selected"
+	| "completed"
+	| "completedSelected"
+	| "empty";
 
 interface BlockProps {
 	children: ReactNode;
@@ -25,6 +30,7 @@ export default function Block({
 		default: "border-gray-6 bg-gray-2",
 		selected: "border-border-strong",
 		completed: "border-gray-6 bg-gray-3",
+		completedSelected: "border-border-strong bg-gray-3", // New variant
 		empty: "text-fg-disabled border-border-default",
 	};
 

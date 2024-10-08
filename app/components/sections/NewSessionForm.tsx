@@ -117,7 +117,7 @@ export default function NewSessionForm({
 		<>
 			<form
 				action={handleSubmit}
-				className="grid grid-cols-subgrid col-span-full pb-20"
+				className="grid grid-cols-subgrid col-span-full gap-y-3 pb-20"
 			>
 				<SetGrid
 					setData={sortedSetData}
@@ -128,28 +128,31 @@ export default function NewSessionForm({
 					jokerSets={2}
 				/>
 				<input type="hidden" name="setId" value={currentSet.set_id} />
-				<NumberInput
-					label="Weight"
-					id="weightPerformed"
-					name="weightPerformed"
-					defaultValue={currentSet.weight_programmed || 0}
-					min={0}
-					className="grid grid-cols-subgrid col-span-full"
-				/>
-				<NumberInput
-					label="Reps"
-					id="repsPerformed"
-					name="repsPerformed"
-					defaultValue={currentSet.reps_programmed}
-					min={0}
-					className="grid grid-cols-subgrid col-span-full"
-					outerClassName="border-t-0"
-				/>
+				<div className="grid grid-cols-subgrid col-span-full">
+					<NumberInput
+						label="Weight"
+						id="weightPerformed"
+						name="weightPerformed"
+						defaultValue={currentSet.weight_programmed || 0}
+						min={0}
+						className="grid grid-cols-subgrid col-span-full"
+					/>
+					<NumberInput
+						label="Reps"
+						id="repsPerformed"
+						name="repsPerformed"
+						defaultValue={currentSet.reps_programmed}
+						min={0}
+						className="grid grid-cols-subgrid col-span-full"
+						outerClassName="border-t-0"
+					/>
+				</div>
+
 				<div className="grid grid-cols-subgrid col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 					<Button
 						label={
 							currentSetIndex < sortedSetData.length - 1
-								? "Next set"
+								? "Submit Set"
 								: "Complete Session"
 						}
 						loading="Submitting..."
