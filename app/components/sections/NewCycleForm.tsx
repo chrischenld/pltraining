@@ -55,6 +55,7 @@ export default function NewCycleForm() {
 				<NumberInput
 					label="Squat"
 					id="squat"
+					name="squat"
 					defaultValue={315}
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
@@ -62,6 +63,7 @@ export default function NewCycleForm() {
 				<NumberInput
 					label="Bench"
 					id="bench"
+					name="bench"
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
 					outerClassName="border-t-0"
@@ -69,6 +71,7 @@ export default function NewCycleForm() {
 				<NumberInput
 					label="Deadlift"
 					id="deadlift"
+					name="deadlift"
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
 					outerClassName="border-t-0"
@@ -76,6 +79,7 @@ export default function NewCycleForm() {
 				<NumberInput
 					label="Overhead Press"
 					id="overheadPress"
+					name="overheadPress"
 					min={0}
 					className="grid grid-cols-subgrid col-span-full"
 					outerClassName="border-t-0"

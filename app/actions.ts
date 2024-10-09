@@ -244,21 +244,15 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 	const repsPerformed = Number(formData.get("repsPerformed"));
 	const weightProgrammed = Number(formData.get("weightProgrammed"));
 	const repsProgrammed = Number(formData.get("repsProgrammed"));
-
-	console.log(`submitSet: Received set_id ${setId}`);
-	console.log(
-		`submitSet: Weight performed ${weightPerformed}, programmed ${weightProgrammed}`
-	);
-	console.log(
-		`submitSet: Reps performed ${repsPerformed}, programmed ${repsProgrammed}`
-	);
+	const rpePerformed = Number(formData.get("rpePerformed"));
 
 	if (
 		!setId ||
 		isNaN(weightPerformed) ||
 		isNaN(repsPerformed) ||
 		isNaN(weightProgrammed) ||
-		isNaN(repsProgrammed)
+		isNaN(repsProgrammed) ||
+		isNaN(rpePerformed)
 	) {
 		console.log("submitSet: Missing or invalid required fields");
 		return { message: "Missing or invalid required fields", success: false };
@@ -273,6 +267,7 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 		reps_performed: repsPerformed,
 		updated_at: new Date(),
 		success: success,
+		rate_perceived_exertion: rpePerformed,
 	};
 
 	try {
@@ -282,7 +277,8 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 				WEIGHT_PERFORMED = ${setData.weight_performed},
 				REPS_PERFORMED = ${setData.reps_performed},
 				UPDATED_AT = CURRENT_TIMESTAMP,
-				SUCCESS = ${setData.success}
+				SUCCESS = ${setData.success},
+				RATE_PERCEIVED_EXERTION = ${setData.rate_perceived_exertion}
 			WHERE SET_ID = ${setData.set_id}
 		`;
 

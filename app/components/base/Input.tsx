@@ -6,11 +6,13 @@ interface InputProps {
 	label: string;
 	type: "text" | "number";
 	id?: string;
+	name?: string;
 	className?: string;
 	outerClassName?: string;
 	required?: boolean;
 	isInvalid?: boolean;
 	errorMessage?: string;
+	isDisabled?: boolean;
 	[key: string]: any;
 }
 
@@ -18,10 +20,12 @@ export default function Input({
 	type,
 	label,
 	id,
+	name,
 	className,
 	outerClassName,
 	required,
 	isInvalid,
+	isDisabled,
 	errorMessage,
 	...props
 }: InputProps): JSX.Element {
@@ -34,13 +38,14 @@ export default function Input({
 			<div className={`relative ${className}`}>
 				<input
 					type={type}
-					className={`bg-gray-3 border border-gray-6 rounded-[0.125rem] h-[7.25rem] px-3 pb-4 text-5xl pt-10 ${GeistSans.className} font-semibold tracking-tight [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${className}`}
-					name={id}
+					className={`bg-gray-3 border border-gray-6 rounded-[0.125rem] h-[7.25rem] px-3 pb-4 text-5xl pt-10 ${GeistSans.className} font-semibold tracking-tight [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:cursor-not-allowed ${className}`}
 					id={id}
+					name={name}
 					required={required}
 					aria-required={required}
 					aria-invalid={isInvalid}
 					aria-describedby={errorMessage ? errorId : undefined}
+					disabled={isDisabled}
 					{...props}
 				/>
 				<label
