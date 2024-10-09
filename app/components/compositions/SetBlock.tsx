@@ -61,17 +61,41 @@ export default function SetBlock({
 					{set.set_number}
 				</p>
 			</Block>
-			<div className="grid grid-rows-3 col-span-full px-1">
-				{set.weight_performed && set.reps_performed ? (
-					<p className="text-fg-success lowercase">
-						{set.weight_performed}x{set.reps_performed}
+			<div className="grid grid-cols-subgrid grid-rows-3 col-span-full px-1 gap-y-0.5">
+				<div className="grid grid-cols-subgrid col-span-full">
+					{set.weight_performed && set.reps_performed ? (
+						<>
+							<p className="text-gray-5  border-gray-3">lb</p>
+							<p className="text-fg-success text-right">
+								{set.weight_performed}
+							</p>
+						</>
+					) : (
+						<>
+							<p className="text-gray-5  border-gray-3">lb</p>
+							<p className="text-right ">{set.weight_programmed}</p>
+						</>
+					)}
+				</div>
+				<div className="grid grid-cols-subgrid col-span-full">
+					{set.weight_performed && set.reps_performed ? (
+						<>
+							<p className="text-gray-5  border-gray-3">rp</p>
+							<p className="text-fg-success text-right">{set.reps_performed}</p>
+						</>
+					) : (
+						<>
+							<p className="text-gray-5  border-gray-3">rp</p>
+							<p className="text-right">{set.reps_programmed}</p>
+						</>
+					)}
+				</div>
+				<div className="grid grid-cols-subgrid col-span-full">
+					<p className="text-gray-5  border-gray-3">%%</p>
+					<p className="text-gray-5 text-right ">
+						{set.weight_percentage_programmed}
 					</p>
-				) : (
-					<p>
-						{set.weight_programmed}x{set.reps_programmed}
-					</p>
-				)}
-				<p>{set.weight_percentage_programmed}%</p>
+				</div>
 			</div>
 		</div>
 	);

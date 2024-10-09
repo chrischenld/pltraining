@@ -43,11 +43,11 @@ export default function JokerSetBlock({
 				onSelect={onSelect}
 			>
 				<p className="flex items-center justify-center col-span-2 text-gray-6">
-					-
+					JKR
 				</p>
 			</Block>
 			<div className="grid grid-rows-3 col-span-full px-1">
-				<p className="text-gray-6">JKR</p>
+				<p className="text-gray-6">--</p>
 				<p className="text-gray-6">--</p>
 				<p className="text-gray-6">--</p>
 				{/* {/* <p className="text-gray-6">--</p> */}
