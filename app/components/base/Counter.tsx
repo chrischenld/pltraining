@@ -33,18 +33,23 @@ export default function Counter({
 	};
 
 	return (
-		<div className={`${outerClassName} p-1 border border-gray-3`}>
-			<input
-				className={`w-full h-full rounded-[0.125rem] bg-gray-3 text-fg-default text-center border border-gray-6 text-sm tracking-[-0.1em] ${className}`}
+		<div className={`${outerClassName} p-1 border border-gray-3 flex`}>
+			<button
+				type="button"
 				onClick={handleIncrement}
-				type="number"
-				id={id}
-				name={name}
-				value={value}
-				min={min}
-				max={max}
-				readOnly
-			/>
+				className={`w-full border border-gray-6 text-center ${className}`}
+				aria-label={`Increment counter (current value: ${value})`}
+			>
+				<output
+					id={id}
+					name={name}
+					htmlFor={id}
+					className="text-sm w-full block tracking-[-0.1em]"
+				>
+					{value}
+				</output>
+			</button>
+			<input type="hidden" name={name} value={value} />
 		</div>
 	);
 }
