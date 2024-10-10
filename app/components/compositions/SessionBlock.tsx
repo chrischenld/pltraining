@@ -46,19 +46,30 @@ export default function SessionBlock({
 			variant={isSelected ? "selected" : variant}
 			onSelect={handleSelect}
 			isSelectable={!session.completed && !isNewCyclePrompt}
-			className={className}
+			className={`${className} grid-rows-8 grid-cols-8`}
 			outerClassName={outerClassName}
 			paddingSize="p-2"
 		>
-			<p className={textClass}>{padSessionId(session.session_number)}</p>
-			<p>
-				{isNewCyclePrompt
-					? "--"
-					: `${truncateLiftType(session.primary_lift_type)}/${truncateLiftType(
-							session.secondary_lift_type
-					  )}`}
+			<p className={`row-start-2 col-start-2 text-2xl ${textClass}`}>
+				{padSessionId(session.session_number)}
 			</p>
-			<p>{session.date ? renderDate(session.date) : "--"}</p>
+			<div className="row-end-8 col-start-2 col-end-8 self-stretch flex flex-col gap-1 justify-end">
+				<div className="flex flex-row justify-between">
+					<p className="text-gray-6">LFT</p>
+					<p>
+						{isNewCyclePrompt
+							? "--"
+							: `${truncateLiftType(
+									session.primary_lift_type
+							  )}/${truncateLiftType(session.secondary_lift_type)}`}
+					</p>
+				</div>
+				<div className="flex flex-row justify-between">
+					<p className="text-gray-6">DAT</p>
+					<p>{session.date ? renderDate(session.date) : "--"}</p>
+				</div>
+				{/* <p>70/80/90</p> */}
+			</div>
 		</Block>
 	);
 }

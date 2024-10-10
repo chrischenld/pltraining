@@ -13,6 +13,7 @@ const config: Config = {
 			sm: "0.875rem",
 			base: "1rem",
 			xl: "1.25rem",
+			"2xl": "1.5rem",
 			"3.5xl": "2rem",
 			"5xl": "3rem",
 		},
@@ -20,6 +21,14 @@ const config: Config = {
 			xs: "0.0625rem",
 		},
 		extend: {
+			gridColumn: {
+				"span-20": "span 20 / span 20",
+				"span-22": "span 22 / span 22",
+			},
+			gridTemplateColumns: {
+				"20": "repeat(20, minmax(0, 1fr))",
+				"24": "repeat(24, minmax(0, 1fr))",
+			},
 			colors: {
 				fg: {
 					default: "#FAFAFA",

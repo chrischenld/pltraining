@@ -157,7 +157,7 @@ export default function NewSessionForm({
 					/>
 				</div>
 
-				<div className="grid grid-cols-10 col-span-full p-1 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
+				<div className="grid grid-cols-10 md:grid-cols-24 col-span-full p-1 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 					<Counter
 						count={7}
 						outerClassName="col-span-2"
@@ -175,7 +175,7 @@ export default function NewSessionForm({
 						id="repsPerformed"
 						name="repsPerformed"
 					/>
-					<div className="p-1 border border-gray-3 border-l-0 col-span-6">
+					<div className="p-1 border border-gray-3 border-l-0 col-span-6 md:col-span-20">
 						<Button
 							label={
 								currentSetIndex < sortedSetData.length - 1

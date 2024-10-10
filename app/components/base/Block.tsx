@@ -43,11 +43,11 @@ export default function Block({
 	return (
 		<div
 			className={`grid border ${paddingSize} border-gray-3
-			${isSelectable ? "cursor-pointer" : ""} ${className} ${outerClassName}`}
+			${isSelectable ? "cursor-pointer" : ""} ${outerClassName}`}
 			onClick={handleClick}
 		>
 			<div
-				className={`grid aspect-square rounded-[0.125rem] border align-items p-2 tracking-wider ${variants[variant]} ${className}`}
+				className={`grid aspect-square rounded-[0.125rem] border align-items tracking-wider ${variants[variant]} ${className}`}
 			>
 				{children}
 			</div>

@@ -92,8 +92,8 @@ export default function SessionGrid({
 							isSelected={selectedSessionId === session.session_id}
 							onSelect={handleSessionSelect}
 							isNewCyclePrompt={isNewCyclePrompt}
-							className={gridSpanClassName}
-							outerClassName={borderClass}
+							outerClassName={`${borderClass} ${gridSpanClassName}`}
+							className="col-span-4"
 						/>
 					);
 				})}

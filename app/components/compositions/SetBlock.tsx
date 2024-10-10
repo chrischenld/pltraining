@@ -41,7 +41,7 @@ export default function SetBlock({
 			<Block
 				paddingSize="p-1"
 				className="grid grid-rows-1 grid-cols-subgrid col-span-full"
-				outerClassName={outerClassName}
+				outerClassName={`${outerClassName} col-span-full`}
 				variant={blockVariant}
 				isSelectable={true}
 				onSelect={onSelect}
