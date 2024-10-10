@@ -30,7 +30,7 @@ export default function JokerSetBlock({
 		<div className={`grid grid-cols-subgrid col-span-2 gap-y-2`}>
 			<Block
 				paddingSize="p-1"
-				className="grid grid-cols-subgrid col-span-full"
+				className="grid grid-rows-1 grid-cols-subgrid col-span-full"
 				outerClassName={outerClassName}
 				variant={
 					set.success
@@ -46,11 +46,19 @@ export default function JokerSetBlock({
 					JKR
 				</p>
 			</Block>
-			<div className="grid grid-rows-3 col-span-full px-1">
-				<p className="text-gray-6">--</p>
-				<p className="text-gray-6">--</p>
-				<p className="text-gray-6">--</p>
-				{/* {/* <p className="text-gray-6">--</p> */}
+			<div className="grid grid-cols-subgrid grid-rows-3 col-span-full px-1 gap-y-0.5">
+				<div className="grid grid-cols-subgrid col-span-full">
+					<p className="text-gray-6">--</p>
+					<p className="text-gray-6 text-right">--</p>
+				</div>
+				<div className="grid grid-cols-subgrid col-span-full">
+					<p className="text-gray-6">--</p>
+					<p className="text-gray-6 text-right">--</p>
+				</div>
+				<div className="grid grid-cols-subgrid col-span-full">
+					<p className="text-gray-6">--</p>
+					<p className="text-gray-6 text-right">--</p>
+				</div>
 			</div>
 		</div>
 	);

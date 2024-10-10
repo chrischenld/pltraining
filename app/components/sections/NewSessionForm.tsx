@@ -157,11 +157,11 @@ export default function NewSessionForm({
 					/>
 				</div>
 
-				<div className="grid grid-cols-10 col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
+				<div className="grid grid-cols-10 col-span-full p-1 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 					<Counter
 						count={7}
 						outerClassName="col-span-2"
-						className="bg-gray-4 text-gray-10"
+						className="bg-gray-4 text-gray-10 aspect-square"
 						id="rpePerformed"
 						name="rpePerformed"
 						increment={0.5}
@@ -171,6 +171,7 @@ export default function NewSessionForm({
 					<Counter
 						count={currentSet.reps_programmed}
 						outerClassName="col-span-2 border-l-0"
+						className="aspect-square"
 						id="repsPerformed"
 						name="repsPerformed"
 					/>
@@ -183,7 +184,7 @@ export default function NewSessionForm({
 							}
 							loading="Submitting..."
 							completed="Submitted"
-							className="w-full"
+							className="w-full h-full"
 							disabled={isPending || isCompleted}
 							isCompleted={isCompleted}
 						/>
