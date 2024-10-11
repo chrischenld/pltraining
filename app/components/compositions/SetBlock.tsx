@@ -48,8 +48,8 @@ export default function SetBlock({
 			>
 				<p
 					className={`flex items-center justify-center col-span-2 ${
-						set.success && isSelected
-							? "text-fg-success"
+						set.success === false
+							? "text-red-10"
 							: set.success
 							? "text-fg-success"
 							: isSelected
@@ -65,14 +65,14 @@ export default function SetBlock({
 				<div className="grid grid-cols-subgrid col-span-full">
 					{set.weight_performed && set.reps_performed ? (
 						<>
-							<p className="text-gray-5  border-gray-3">lb</p>
+							<p className="text-gray-5 border-gray-3">lb</p>
 							<p className="text-fg-success text-right">
 								{set.weight_performed}
 							</p>
 						</>
 					) : (
 						<>
-							<p className="text-gray-5  border-gray-3">lb</p>
+							<p className="text-gray-5 border-gray-3">lb</p>
 							<p className="text-right ">{set.weight_programmed}</p>
 						</>
 					)}
@@ -80,7 +80,7 @@ export default function SetBlock({
 				<div className="grid grid-cols-subgrid col-span-full">
 					{set.weight_performed && set.reps_performed ? (
 						<>
-							<p className="text-gray-5  border-gray-3">rp</p>
+							<p className="text-gray-5 border-gray-3">rp</p>
 							<p className="text-fg-success text-right">{set.reps_performed}</p>
 						</>
 					) : (
