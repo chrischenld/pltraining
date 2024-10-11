@@ -42,7 +42,7 @@ export default function JokerSetBlock({
 				isSelectable={true}
 				onSelect={onSelect}
 			>
-				<p className="flex items-center justify-center col-span-2 text-gray-6">
+				<p className="flex items-center justify-center col-span-2 row-span-full text-gray-6">
 					JKR
 				</p>
 			</Block>

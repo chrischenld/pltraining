@@ -43,7 +43,7 @@ export default function Block({
 	return (
 		<div
 			className={`grid border ${paddingSize} border-gray-3
-			${isSelectable ? "cursor-pointer" : ""} ${outerClassName}`}
+			${isSelectable ? "cursor-pointer" : ""} ${outerClassName} h-fit`}
 			onClick={handleClick}
 		>
 			<div

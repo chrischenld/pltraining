@@ -42,7 +42,7 @@ export default function SetGrid({
 					set={set}
 					isSelected={sortedSetData.indexOf(set) === currentSetIndex}
 					onSelect={() => handleSetSelect(sortedSetData.indexOf(set))}
-					outerClassName={index < 2 ? "border-r-0" : ""}
+					outerClassName={index < 3 ? "border-r-0" : ""}
 					primaryLiftType={primaryLiftType}
 					secondaryLiftType={secondaryLiftType}
 				/>
@@ -53,7 +53,9 @@ export default function SetGrid({
 					set={{} as Set} // Pass an empty object as Set, modify as needed
 					isSelected={false}
 					onSelect={() => {}} // Implement joker set selection logic if needed
-					outerClassName={index === 0 ? "border-r-0" : ""}
+					outerClassName={
+						index === 0 ? "border-r-0" : index === 1 ? "pb-[5px]" : ""
+					}
 					primaryLiftType={primaryLiftType}
 					secondaryLiftType={secondaryLiftType}
 				/>

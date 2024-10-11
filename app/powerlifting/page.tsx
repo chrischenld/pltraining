@@ -22,9 +22,6 @@ const NewCyclePrompt = ({ sessions }: { sessions: Session[] }) => {
 			</div>
 			<footer className="grid grid-cols-subgrid col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 				<Link href="/powerlifting/new-cycle">
-					{/* <p className=" h-12 flex items-center justify-center text-fg-default">
-						Start new cycle →
-					</p> */}
 					<Button className="w-full" label="Start new cycle →" />
 				</Link>
 			</footer>

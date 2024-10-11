@@ -47,7 +47,7 @@ export default function SetBlock({
 				onSelect={onSelect}
 			>
 				<p
-					className={`flex items-center justify-center col-span-2 ${
+					className={`flex items-center justify-center col-span-2 row-span-full ${
 						set.success === false
 							? "text-red-10"
 							: set.success

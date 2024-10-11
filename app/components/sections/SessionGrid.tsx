@@ -56,7 +56,7 @@ export default function SessionGrid({
 			method="get"
 			className="grid grid-cols-subgrid col-span-full"
 		>
-			<div className="grid grid-cols-subgrid col-span-full pb-24">
+			<div className="grid grid-cols-subgrid auto-rows-max col-span-full pb-24 md:pb-0">
 				{sessions.map((session, index) => {
 					let borderClass = "border";
 
