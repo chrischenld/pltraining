@@ -25,6 +25,8 @@ export default function NewSessionForm({
 	sessionData: Session;
 	setData: Set[];
 }) {
+	console.log("NewSessionForm: Component rendering");
+
 	const [state, formAction] = useFormState(submitSet, initialState);
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
@@ -32,13 +34,15 @@ export default function NewSessionForm({
 	const renderCount = useRef(0);
 	const lastSubmissionTime = useRef(0);
 	const nextSetIndexRef = useRef<number | null>(null);
+	const isSubmittingRef = useRef(false);
 
-	const sortedSetData = useMemo(
-		() => [...setData].sort((a, b) => a.set_id - b.set_id),
-		[setData]
-	);
+	const sortedSetData = useMemo(() => {
+		console.log("NewSessionForm: Sorting setData");
+		return [...setData].sort((a, b) => a.set_id - b.set_id);
+	}, [setData]);
 
 	const initialNonCompletedIndex = useMemo(() => {
+		console.log("NewSessionForm: Calculating initialNonCompletedIndex");
 		const index = sortedSetData.findIndex((set) => !set.success);
 		return index !== -1 ? index : 0;
 	}, [sortedSetData]);
@@ -50,34 +54,45 @@ export default function NewSessionForm({
 	const currentSet = sortedSetData[currentSetIndex];
 
 	const resetState = useCallback(() => {
+		console.log("NewSessionForm: Resetting state");
 		formAction(new FormData());
 	}, [formAction]);
 
 	useEffect(() => {
 		renderCount.current += 1;
-		console.log(`NewSessionForm meaningful render: ${renderCount.current}`);
-		console.log(`Current set index: ${currentSetIndex}`);
-		console.log(`Current set ID: ${currentSet?.set_id}`);
-		console.log(`Is completed: ${isCompleted}`);
+		console.log(`NewSessionForm: Render count: ${renderCount.current}`);
+		console.log(`NewSessionForm: Current set index: ${currentSetIndex}`);
+		console.log(`NewSessionForm: Current set ID: ${currentSet?.set_id}`);
+		console.log(`NewSessionForm: Is completed: ${isCompleted}`);
 
 		if (nextSetIndexRef.current !== null) {
+			console.log(
+				`NewSessionForm: Updating currentSetIndex to ${nextSetIndexRef.current}`
+			);
 			setCurrentSetIndex(nextSetIndexRef.current);
 			nextSetIndexRef.current = null;
 		}
 
 		return () => {
-			console.log("NewSessionForm is unmounting");
+			console.log("NewSessionForm: Component is unmounting");
 		};
 	}, [currentSetIndex, currentSet, isCompleted, setData]);
 
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
+			console.log("NewSessionForm: handleSubmit called");
+			if (isSubmittingRef.current) {
+				console.log("NewSessionForm: Submission already in progress, skipping");
+				return;
+			}
+
+			isSubmittingRef.current = true;
 			const now = Date.now();
 			const timeSinceLastSubmission = lastSubmissionTime.current
 				? now - lastSubmissionTime.current
 				: "First submission";
 			console.log(
-				`Submitting form at ${now}. Time since last submission: ${timeSinceLastSubmission}ms`
+				`NewSessionForm: Submitting form at ${now}. Time since last submission: ${timeSinceLastSubmission}ms`
 			);
 			lastSubmissionTime.current = now;
 
@@ -91,27 +106,35 @@ export default function NewSessionForm({
 		[formAction, currentSet]
 	);
 
+	const hasSubmittedSuccessfully = useRef(false);
+
 	useEffect(() => {
-		if (state.success) {
-			console.log("Successful submission, updating state");
+		console.log("NewSessionForm: state effect triggered", state);
+		if (state.success && !hasSubmittedSuccessfully.current) {
+			console.log("NewSessionForm: Successful submission, updating state");
+			hasSubmittedSuccessfully.current = true;
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
 				);
 				if (nextNonCompletedIndex !== -1) {
 					console.log(
-						`Moving to next non-completed set: ${sortedSetData[nextNonCompletedIndex].set_id}`
+						`NewSessionForm: Moving to next non-completed set: ${sortedSetData[nextNonCompletedIndex].set_id}`
 					);
-					nextSetIndexRef.current = nextNonCompletedIndex;
+					setCurrentSetIndex(nextNonCompletedIndex);
 				} else {
-					console.log("All sets completed");
+					console.log("NewSessionForm: All sets completed");
 					setIsCompleted(true);
 				}
 				router.refresh();
-				resetState();
+				isSubmittingRef.current = false;
 			});
+		} else {
+			isSubmittingRef.current = false;
 		}
-	}, [state, currentSetIndex, sortedSetData, router, resetState]);
+	}, [state, currentSetIndex, sortedSetData, router]);
+
+	console.log("NewSessionForm: Rendering form");
 
 	return (
 		<>

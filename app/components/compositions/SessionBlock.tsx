@@ -50,7 +50,11 @@ export default function SessionBlock({
 			outerClassName={outerClassName}
 			paddingSize="p-2"
 		>
-			<p className={`row-start-2 col-start-2 text-2xl ${textClass}`}>
+			<p
+				className={`row-start-2 col-start-2 text-2xl ${
+					session.completed ? "text-fg-success" : ""
+				} ${textClass}`}
+			>
 				{padSessionId(session.session_number)}
 			</p>
 			<div className="row-end-8 col-start-2 col-end-8 self-stretch flex flex-col gap-1 justify-end">

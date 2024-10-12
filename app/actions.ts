@@ -239,6 +239,9 @@ async function createSetsForLift(
 }
 
 export const submitSet = async (prevState: any, formData: FormData) => {
+	console.log("submitSet: Starting function");
+	console.log("Form data:", Object.fromEntries(formData));
+
 	const setId = formData.get("setId");
 	const weightPerformed = Number(formData.get("weightPerformed"));
 	const repsPerformed = Number(formData.get("repsPerformed"));
@@ -272,18 +275,17 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 
 	try {
 		await sql`
-			UPDATE Sets
-			SET 
-				WEIGHT_PERFORMED = ${setData.weight_performed},
-				REPS_PERFORMED = ${setData.reps_performed},
-				UPDATED_AT = CURRENT_TIMESTAMP,
-				SUCCESS = ${setData.success},
-				RATE_PERCEIVED_EXERTION = ${setData.rate_perceived_exertion}
-			WHERE SET_ID = ${setData.set_id}
-		`;
+      UPDATE Sets
+      SET 
+        WEIGHT_PERFORMED = ${setData.weight_performed},
+        REPS_PERFORMED = ${setData.reps_performed},
+        UPDATED_AT = CURRENT_TIMESTAMP,
+        SUCCESS = ${setData.success},
+        RATE_PERCEIVED_EXERTION = ${setData.rate_perceived_exertion}
+      WHERE SET_ID = ${setData.set_id}
+    `;
 
-		// console.log(`submitSet: Successfully updated set_id ${setId}`);
-		revalidatePath("/powerlifting/new-session");
+		console.log(`submitSet: Successfully updated set_id ${setId}`);
 		return { message: "Set updated successfully", success: true };
 	} catch (error) {
 		console.error("Error updating set:", error);
