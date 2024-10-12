@@ -31,7 +31,7 @@ export default function NewSessionForm({
 	const [state, formAction] = useFormState(submitSet, initialState);
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
-	const [isCompleted, setIsCompleted] = useState(false);
+	// const [isCompleted, setIsCompleted] = useState(false);
 	const renderCount = useRef(0);
 	const isSubmittingRef = useRef(false);
 
@@ -50,17 +50,21 @@ export default function NewSessionForm({
 
 	useEffect(() => {
 		if (currentSetIndex === sortedSetData.length - 1 && currentSet?.success) {
-			setIsCompleted(true);
+			// setIsCompleted(true);
 		}
 	}, [currentSetIndex, sortedSetData, currentSet]);
 
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
 			console.log("NewSessionForm: handleSubmit called");
-			if (isSubmittingRef.current || isCompleted) {
-				console.log(
-					"NewSessionForm: Submission already in progress or completed, skipping"
-				);
+			// if (isSubmittingRef.current || isCompleted) {
+			// 	console.log(
+			// 		"NewSessionForm: Submission already in progress or completed, skipping"
+			// 	);
+			// 	return;
+			// }
+			if (isSubmittingRef.current) {
+				console.log("NewSessionForm: Submission already in progress, skipping");
 				return;
 			}
 
@@ -72,7 +76,8 @@ export default function NewSessionForm({
 			formData.append("repsProgrammed", currentSet.reps_programmed.toString());
 			formAction(formData);
 		},
-		[formAction, currentSet, isCompleted]
+		[formAction, currentSet]
+		// [formAction, currentSet, isCompleted]
 	);
 
 	useEffect(() => {
@@ -90,7 +95,7 @@ export default function NewSessionForm({
 					setCurrentSetIndex(nextNonCompletedIndex);
 				} else {
 					console.log("NewSessionForm: All sets completed");
-					setIsCompleted(true);
+					// setIsCompleted(true);
 				}
 				isSubmittingRef.current = false;
 				router.refresh();
@@ -165,16 +170,11 @@ export default function NewSessionForm({
 					/>
 					<div className="p-1 border border-gray-3 border-l-0 col-span-6 md:col-span-20">
 						<Button
-							label={
-								currentSetIndex < sortedSetData.length - 1
-									? "Submit Set"
-									: "Complete Session"
-							}
+							label="Submit Set"
 							loading="Submitting..."
 							completed="Submitted"
 							className="w-full h-full"
-							disabled={isPending || isCompleted}
-							isCompleted={isCompleted}
+							disabled={isPending}
 						/>
 					</div>
 				</div>

@@ -63,10 +63,18 @@ export default function SetBlock({
 			</Block>
 			<div className="grid grid-cols-subgrid grid-rows-3 col-span-full px-1 gap-y-0.5">
 				<div className="grid grid-cols-subgrid col-span-full">
-					{set.weight_performed && set.reps_performed ? (
+					{set.weight_performed &&
+					set.reps_performed &&
+					set.weight_programmed ? (
 						<>
 							<p className="text-gray-5 border-gray-3">lb</p>
-							<p className="text-fg-success text-right">
+							<p
+								className={`${
+									set.weight_performed >= set.weight_programmed
+										? "text-fg-success"
+										: "text-fg-danger"
+								} text-right`}
+							>
 								{set.weight_performed}
 							</p>
 						</>
@@ -81,7 +89,15 @@ export default function SetBlock({
 					{set.weight_performed && set.reps_performed ? (
 						<>
 							<p className="text-gray-5 border-gray-3">rp</p>
-							<p className="text-fg-success text-right">{set.reps_performed}</p>
+							<p
+								className={`${
+									set.reps_performed >= set.reps_programmed
+										? "text-fg-success"
+										: "text-fg-danger"
+								} text-right`}
+							>
+								{set.reps_performed}
+							</p>
 						</>
 					) : (
 						<>

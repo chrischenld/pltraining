@@ -296,6 +296,7 @@ export const submitSet = async (prevState: any, formData: FormData) => {
       WHERE SESSION_ID = ${sessionId} AND SUCCESS IS NULL
     `;
 
+		console.log(`SESSION ID: ${sessionId}`);
 		console.log(`INCOMPLETE SETS: ${incompleteSets.rows[0].count}`);
 
 		if (incompleteSets.rows[0].count === 0) {
