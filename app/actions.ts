@@ -248,6 +248,7 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 	const weightProgrammed = Number(formData.get("weightProgrammed"));
 	const repsProgrammed = Number(formData.get("repsProgrammed"));
 	const rpePerformed = Number(formData.get("rpePerformed"));
+	const sessionId = Number(formData.get("sessionId")); // Add this line to get sessionId
 
 	if (
 		!setId ||
@@ -255,7 +256,8 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 		isNaN(repsPerformed) ||
 		isNaN(weightProgrammed) ||
 		isNaN(repsProgrammed) ||
-		isNaN(rpePerformed)
+		isNaN(rpePerformed) ||
+		isNaN(sessionId)
 	) {
 		console.log("submitSet: Missing or invalid required fields");
 		return { message: "Missing or invalid required fields", success: false };
@@ -274,6 +276,8 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 	};
 
 	try {
+		await sql`BEGIN`;
+
 		await sql`
       UPDATE Sets
       SET 
@@ -285,9 +289,31 @@ export const submitSet = async (prevState: any, formData: FormData) => {
       WHERE SET_ID = ${setData.set_id}
     `;
 
+		// Check if all sets for the session are completed
+		const incompleteSets = await sql`
+      SELECT COUNT(*) as count
+      FROM Sets
+      WHERE SESSION_ID = ${sessionId} AND SUCCESS IS NULL
+    `;
+
+		console.log(`INCOMPLETE SETS: ${incompleteSets.rows[0].count}`);
+
+		if (incompleteSets.rows[0].count === 0) {
+			// All sets are completed, update the session
+			await sql`
+        UPDATE Sessions
+        SET COMPLETED = true
+        WHERE SESSION_ID = ${sessionId}
+      `;
+			console.log(`submitSet: Marked session ${sessionId} as completed`);
+		}
+
+		await sql`COMMIT`;
+
 		console.log(`submitSet: Successfully updated set_id ${setId}`);
 		return { message: "Set updated successfully", success: true };
 	} catch (error) {
+		await sql`ROLLBACK`;
 		console.error("Error updating set:", error);
 		return { message: "Failed to update set", success: false };
 	}

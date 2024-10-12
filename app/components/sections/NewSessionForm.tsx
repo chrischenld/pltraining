@@ -42,18 +42,17 @@ export default function NewSessionForm({
 
 	const [currentSetIndex, setCurrentSetIndex] = useState(() => {
 		console.log("NewSessionForm: Calculating initialNonCompletedIndex");
-		return sortedSetData.findIndex((set) => !set.success);
+		const index = sortedSetData.findIndex((set) => !set.success);
+		return index !== -1 ? index : sortedSetData.length - 1;
 	});
 
 	const currentSet = sortedSetData[currentSetIndex];
 
 	useEffect(() => {
-		renderCount.current += 1;
-		console.log(`NewSessionForm: Render count: ${renderCount.current}`);
-		console.log(`NewSessionForm: Current set index: ${currentSetIndex}`);
-		console.log(`NewSessionForm: Current set ID: ${currentSet?.set_id}`);
-		console.log(`NewSessionForm: Is completed: ${isCompleted}`);
-	}, [currentSetIndex, currentSet, isCompleted]);
+		if (currentSetIndex === sortedSetData.length - 1 && currentSet?.success) {
+			setIsCompleted(true);
+		}
+	}, [currentSetIndex, sortedSetData, currentSet]);
 
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
@@ -116,6 +115,7 @@ export default function NewSessionForm({
 					jokerSets={2}
 				/>
 				<input type="hidden" name="setId" value={currentSet.set_id} />
+				<input type="hidden" name="sessionId" value={sessionData.session_id} />
 				<div className="grid grid-cols-subgrid col-span-full">
 					<NumberInput
 						label="Weight"
