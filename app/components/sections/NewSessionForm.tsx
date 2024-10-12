@@ -16,6 +16,7 @@ import Button from "@/app/components/base/Button";
 import SetGrid from "./SetGrid";
 import { Session, Set } from "@/app/types";
 import Counter from "@/app/components/base/Counter";
+
 const initialState = { message: "", success: false };
 
 export default function NewSessionForm({
@@ -32,8 +33,6 @@ export default function NewSessionForm({
 	const [isPending, startTransition] = useTransition();
 	const [isCompleted, setIsCompleted] = useState(false);
 	const renderCount = useRef(0);
-	const lastSubmissionTime = useRef(0);
-	const nextSetIndexRef = useRef<number | null>(null);
 	const isSubmittingRef = useRef(false);
 
 	const sortedSetData = useMemo(() => {
@@ -41,22 +40,12 @@ export default function NewSessionForm({
 		return [...setData].sort((a, b) => a.set_id - b.set_id);
 	}, [setData]);
 
-	const initialNonCompletedIndex = useMemo(() => {
+	const [currentSetIndex, setCurrentSetIndex] = useState(() => {
 		console.log("NewSessionForm: Calculating initialNonCompletedIndex");
-		const index = sortedSetData.findIndex((set) => !set.success);
-		return index !== -1 ? index : 0;
-	}, [sortedSetData]);
-
-	const [currentSetIndex, setCurrentSetIndex] = useState(
-		initialNonCompletedIndex
-	);
+		return sortedSetData.findIndex((set) => !set.success);
+	});
 
 	const currentSet = sortedSetData[currentSetIndex];
-
-	const resetState = useCallback(() => {
-		console.log("NewSessionForm: Resetting state");
-		formAction(new FormData());
-	}, [formAction]);
 
 	useEffect(() => {
 		renderCount.current += 1;
@@ -64,38 +53,19 @@ export default function NewSessionForm({
 		console.log(`NewSessionForm: Current set index: ${currentSetIndex}`);
 		console.log(`NewSessionForm: Current set ID: ${currentSet?.set_id}`);
 		console.log(`NewSessionForm: Is completed: ${isCompleted}`);
-
-		if (nextSetIndexRef.current !== null) {
-			console.log(
-				`NewSessionForm: Updating currentSetIndex to ${nextSetIndexRef.current}`
-			);
-			setCurrentSetIndex(nextSetIndexRef.current);
-			nextSetIndexRef.current = null;
-		}
-
-		return () => {
-			console.log("NewSessionForm: Component is unmounting");
-		};
-	}, [currentSetIndex, currentSet, isCompleted, setData]);
+	}, [currentSetIndex, currentSet, isCompleted]);
 
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
 			console.log("NewSessionForm: handleSubmit called");
-			if (isSubmittingRef.current) {
-				console.log("NewSessionForm: Submission already in progress, skipping");
+			if (isSubmittingRef.current || isCompleted) {
+				console.log(
+					"NewSessionForm: Submission already in progress or completed, skipping"
+				);
 				return;
 			}
 
 			isSubmittingRef.current = true;
-			const now = Date.now();
-			const timeSinceLastSubmission = lastSubmissionTime.current
-				? now - lastSubmissionTime.current
-				: "First submission";
-			console.log(
-				`NewSessionForm: Submitting form at ${now}. Time since last submission: ${timeSinceLastSubmission}ms`
-			);
-			lastSubmissionTime.current = now;
-
 			formData.append(
 				"weightProgrammed",
 				currentSet.weight_programmed?.toString() || "0"
@@ -103,16 +73,13 @@ export default function NewSessionForm({
 			formData.append("repsProgrammed", currentSet.reps_programmed.toString());
 			formAction(formData);
 		},
-		[formAction, currentSet]
+		[formAction, currentSet, isCompleted]
 	);
-
-	const hasSubmittedSuccessfully = useRef(false);
 
 	useEffect(() => {
 		console.log("NewSessionForm: state effect triggered", state);
-		if (state.success && !hasSubmittedSuccessfully.current) {
+		if (state.success && isSubmittingRef.current) {
 			console.log("NewSessionForm: Successful submission, updating state");
-			hasSubmittedSuccessfully.current = true;
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
@@ -126,11 +93,9 @@ export default function NewSessionForm({
 					console.log("NewSessionForm: All sets completed");
 					setIsCompleted(true);
 				}
-				router.refresh();
 				isSubmittingRef.current = false;
+				router.refresh();
 			});
-		} else {
-			isSubmittingRef.current = false;
 		}
 	}, [state, currentSetIndex, sortedSetData, router]);
 
