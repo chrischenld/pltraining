@@ -290,23 +290,31 @@ export const submitSet = async (prevState: any, formData: FormData) => {
     `;
 
 		// Check if all sets for the session are completed
+		console.log(`Checking incomplete sets for session ${sessionId}`);
 		const incompleteSets = await sql`
       SELECT COUNT(*) as count
       FROM Sets
       WHERE SESSION_ID = ${sessionId} AND SUCCESS IS NULL
     `;
+		console.log("Incomplete sets query result:", incompleteSets.rows[0]);
 
-		console.log(`SESSION ID: ${sessionId}`);
-		console.log(`INCOMPLETE SETS: ${incompleteSets.rows[0].count}`);
+		const incompleteCount = Number(incompleteSets.rows[0].count);
 
-		if (incompleteSets.rows[0].count === 0) {
+		if (incompleteCount === 0) {
+			console.log(
+				`All sets completed for session ${sessionId}, updating session status`
+			);
 			// All sets are completed, update the session
 			await sql`
-        UPDATE Sessions
-        SET COMPLETED = true
-        WHERE SESSION_ID = ${sessionId}
-      `;
+				UPDATE Sessions
+				SET COMPLETED = true
+				WHERE SESSION_ID = ${sessionId}
+			`;
 			console.log(`submitSet: Marked session ${sessionId} as completed`);
+		} else {
+			console.log(
+				`Session ${sessionId} still has incomplete sets: ${incompleteCount}`
+			);
 		}
 
 		await sql`COMMIT`;
@@ -315,7 +323,7 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 		return { message: "Set updated successfully", success: true };
 	} catch (error) {
 		await sql`ROLLBACK`;
-		console.error("Error updating set:", error);
+		console.error("Error in submitSet:", error);
 		return { message: "Failed to update set", success: false };
 	}
 };

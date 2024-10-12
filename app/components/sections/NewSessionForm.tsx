@@ -31,9 +31,8 @@ export default function NewSessionForm({
 	const [state, formAction] = useFormState(submitSet, initialState);
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
-	// const [isCompleted, setIsCompleted] = useState(false);
-	const renderCount = useRef(0);
 	const isSubmittingRef = useRef(false);
+	// const [isCompleted, setIsCompleted] = useState(false);
 
 	const sortedSetData = useMemo(() => {
 		console.log("NewSessionForm: Sorting setData");
