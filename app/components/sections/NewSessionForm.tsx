@@ -123,6 +123,11 @@ export default function NewSessionForm({
 		}
 	}, [showToast]);
 
+	useEffect(() => {
+		console.log("State changed:", { state, currentSetIndex, showToast });
+		console.log("Current set:", sortedSetData[currentSetIndex]);
+	}, [state, currentSetIndex, showToast, sortedSetData]);
+
 	console.log("NewSessionForm: Rendering form");
 
 	return (
@@ -141,7 +146,6 @@ export default function NewSessionForm({
 				className="grid grid-cols-subgrid col-span-full gap-y-6 pb-28"
 			>
 				<SetGrid
-					key={`set-grid-${showToast ? "toast" : "no-toast"}`}
 					setData={sortedSetData}
 					onSetSelect={setCurrentSetIndex}
 					currentSetIndex={currentSetIndex}
