@@ -118,10 +118,11 @@ export default function NewSessionForm({
 		if (showToast) {
 			const timer = setTimeout(() => {
 				setShowToast(false);
+				router.refresh();
 			}, 500); // Match this with the duration prop of your Toast component
 			return () => clearTimeout(timer);
 		}
-	}, [showToast]);
+	}, [showToast, router]);
 
 	console.log("NewSessionForm: Rendering form");
 
