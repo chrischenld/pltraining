@@ -114,14 +114,14 @@ export default function NewSessionForm({
 	}, [state, currentSetIndex, sortedSetData, router]);
 
 	// Add this new effect to reset showToast
-	// useEffect(() => {
-	// 	if (showToast) {
-	// 		const timer = setTimeout(() => {
-	// 			setShowToast(false);
-	// 		}, 500); // Match this with the duration prop of your Toast component
-	// 		return () => clearTimeout(timer);
-	// 	}
-	// }, [showToast]);
+	useEffect(() => {
+		if (showToast) {
+			const timer = setTimeout(() => {
+				setShowToast(false);
+			}, 2000); // Match this with the duration prop of your Toast component
+			return () => clearTimeout(timer);
+		}
+	}, [showToast]);
 
 	console.log("NewSessionForm: Rendering form");
 
@@ -131,7 +131,7 @@ export default function NewSessionForm({
 				id="toast"
 				message={state.message}
 				show={showToast}
-				duration={500}
+				duration={2000}
 				className={
 					state.success ? "bg-green-500 text-white" : "bg-red-500 text-white"
 				}
@@ -141,6 +141,7 @@ export default function NewSessionForm({
 				className="grid grid-cols-subgrid col-span-full gap-y-6 pb-28"
 			>
 				<SetGrid
+					key={`set-grid-${showToast ? "toast" : "no-toast"}`}
 					setData={sortedSetData}
 					onSetSelect={setCurrentSetIndex}
 					currentSetIndex={currentSetIndex}
