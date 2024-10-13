@@ -114,15 +114,14 @@ export default function NewSessionForm({
 	}, [state, currentSetIndex, sortedSetData, router]);
 
 	// Add this new effect to reset showToast
-	useEffect(() => {
-		if (showToast) {
-			const timer = setTimeout(() => {
-				setShowToast(false);
-				router.refresh();
-			}, 500); // Match this with the duration prop of your Toast component
-			return () => clearTimeout(timer);
-		}
-	}, [showToast, router]);
+	// useEffect(() => {
+	// 	if (showToast) {
+	// 		const timer = setTimeout(() => {
+	// 			setShowToast(false);
+	// 		}, 500); // Match this with the duration prop of your Toast component
+	// 		return () => clearTimeout(timer);
+	// 	}
+	// }, [showToast]);
 
 	console.log("NewSessionForm: Rendering form");
 
