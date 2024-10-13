@@ -39,3 +39,9 @@ export enum LiftType {
 	DEADLIFT = "DEADLIFT",
 	OVERHEAD_PRESS = "OVERHEAD_PRESS",
 }
+
+export interface SetSubmissionState {
+	message: string;
+	success: boolean;
+	isUpdate?: boolean;
+}

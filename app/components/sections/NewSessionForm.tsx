@@ -16,8 +16,10 @@ import Button from "@/app/components/base/Button";
 import SetGrid from "./SetGrid";
 import { Session, Set } from "@/app/types";
 import Counter from "@/app/components/base/Counter";
+import Toast from "@/app/components/base/Toast";
+import { SetSubmissionState } from "@/app/types";
 
-const initialState = { message: "", success: false };
+const initialState: SetSubmissionState = { message: "", success: false };
 
 export default function NewSessionForm({
 	sessionData,
@@ -28,7 +30,10 @@ export default function NewSessionForm({
 }) {
 	console.log("NewSessionForm: Component rendering");
 
-	const [state, formAction] = useFormState(submitSet, initialState);
+	const [state, formAction] = useFormState<SetSubmissionState, FormData>(
+		submitSet,
+		initialState
+	);
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const isSubmittingRef = useRef(false);
@@ -47,6 +52,7 @@ export default function NewSessionForm({
 
 	const currentSet = sortedSetData[currentSetIndex];
 
+	// can remove this?
 	useEffect(() => {
 		if (currentSetIndex === sortedSetData.length - 1 && currentSet?.success) {
 			// setIsCompleted(true);
@@ -79,10 +85,15 @@ export default function NewSessionForm({
 		// [formAction, currentSet, isCompleted]
 	);
 
+	const [showToast, setShowToast] = useState(false);
+	const [isUpdate, setIsUpdate] = useState(false);
+
 	useEffect(() => {
 		console.log("NewSessionForm: state effect triggered", state);
 		if (state.success && isSubmittingRef.current) {
 			console.log("NewSessionForm: Successful submission, updating state");
+			setIsUpdate(state.isUpdate || false);
+			setShowToast(state.isUpdate || false); // Only show toast for updates
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
@@ -102,10 +113,29 @@ export default function NewSessionForm({
 		}
 	}, [state, currentSetIndex, sortedSetData, router]);
 
+	// Add this new effect to reset showToast
+	useEffect(() => {
+		if (showToast) {
+			const timer = setTimeout(() => {
+				setShowToast(false);
+			}, 500); // Match this with the duration prop of your Toast component
+			return () => clearTimeout(timer);
+		}
+	}, [showToast]);
+
 	console.log("NewSessionForm: Rendering form");
 
 	return (
 		<>
+			<Toast
+				id="toast"
+				message={state.message}
+				show={showToast}
+				duration={500}
+				className={
+					state.success ? "bg-green-500 text-white" : "bg-red-500 text-white"
+				}
+			/>
 			<form
 				action={handleSubmit}
 				className="grid grid-cols-subgrid col-span-full gap-y-6 pb-28"
@@ -148,7 +178,6 @@ export default function NewSessionForm({
 						isDisabled={true}
 					/>
 				</div>
-
 				<div className="grid grid-cols-10 md:grid-cols-24 col-span-full p-1 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 					<Counter
 						count={7}

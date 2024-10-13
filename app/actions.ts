@@ -3,7 +3,7 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { Set } from "@/app/types";
+import { Set, SetSubmissionState } from "@/app/types";
 
 const CycleSchema = z.object({
 	squat: z.number().positive(),
@@ -238,7 +238,10 @@ async function createSetsForLift(
 	}
 }
 
-export const submitSet = async (prevState: any, formData: FormData) => {
+export const submitSet = async (
+	prevState: SetSubmissionState,
+	formData: FormData
+): Promise<SetSubmissionState> => {
 	console.log("submitSet: Starting function");
 	console.log("Form data:", Object.fromEntries(formData));
 
@@ -278,24 +281,35 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 	try {
 		await sql`BEGIN`;
 
+		// Check if the set already has performed values
+		const existingSet = await sql`
+			SELECT WEIGHT_PERFORMED, REPS_PERFORMED
+			FROM Sets
+			WHERE SET_ID = ${setData.set_id}
+		`;
+
+		const isUpdate =
+			existingSet.rows[0].weight_performed !== null &&
+			existingSet.rows[0].reps_performed !== null;
+
 		await sql`
-      UPDATE Sets
-      SET 
-        WEIGHT_PERFORMED = ${setData.weight_performed},
-        REPS_PERFORMED = ${setData.reps_performed},
-        UPDATED_AT = CURRENT_TIMESTAMP,
-        SUCCESS = ${setData.success},
-        RATE_PERCEIVED_EXERTION = ${setData.rate_perceived_exertion}
-      WHERE SET_ID = ${setData.set_id}
-    `;
+			UPDATE Sets
+			SET 
+				WEIGHT_PERFORMED = ${setData.weight_performed},
+				REPS_PERFORMED = ${setData.reps_performed},
+				UPDATED_AT = CURRENT_TIMESTAMP,
+				SUCCESS = ${setData.success},
+				RATE_PERCEIVED_EXERTION = ${setData.rate_perceived_exertion}
+			WHERE SET_ID = ${setData.set_id}
+		`;
 
 		// Check if all sets for the session are completed
 		console.log(`Checking incomplete sets for session ${sessionId}`);
 		const incompleteSets = await sql`
-      SELECT COUNT(*) as count
-      FROM Sets
-      WHERE SESSION_ID = ${sessionId} AND SUCCESS IS NULL
-    `;
+			SELECT COUNT(*) as count
+			FROM Sets
+			WHERE SESSION_ID = ${sessionId} AND SUCCESS IS NULL
+		`;
 		console.log("Incomplete sets query result:", incompleteSets.rows[0]);
 
 		const incompleteCount = Number(incompleteSets.rows[0].count);
@@ -311,6 +325,7 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 				WHERE SESSION_ID = ${sessionId}
 			`;
 			console.log(`submitSet: Marked session ${sessionId} as completed`);
+			revalidatePath("/powerlifting");
 		} else {
 			console.log(
 				`Session ${sessionId} still has incomplete sets: ${incompleteCount}`
@@ -319,8 +334,19 @@ export const submitSet = async (prevState: any, formData: FormData) => {
 
 		await sql`COMMIT`;
 
-		console.log(`submitSet: Successfully updated set_id ${setId}`);
-		return { message: "Set updated successfully", success: true };
+		console.log(
+			`submitSet: Successfully ${
+				isUpdate ? "updated" : "created"
+			} set_id ${setId}`
+		);
+		revalidatePath("/powerlifting");
+		return {
+			message: isUpdate
+				? "Set updated successfully"
+				: "Set created successfully",
+			success: true,
+			isUpdate: isUpdate,
+		};
 	} catch (error) {
 		await sql`ROLLBACK`;
 		console.error("Error in submitSet:", error);
