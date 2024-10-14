@@ -38,10 +38,16 @@ export default function NewSessionForm({
 	const isSubmittingRef = useRef(false);
 	const renderCountRef = useRef(0);
 
-	const sortedSetData = useMemo(() => {
-		console.log("NewSessionForm: Sorting setData", setData);
-		return [...setData].sort((a, b) => a.set_id - b.set_id);
+	const latestSetDataRef = useRef(setData);
+
+	useEffect(() => {
+		latestSetDataRef.current = setData;
 	}, [setData]);
+
+	const sortedSetData = useMemo(() => {
+		console.log("NewSessionForm: Sorting setData", latestSetDataRef.current);
+		return [...latestSetDataRef.current].sort((a, b) => a.set_id - b.set_id);
+	}, []); // Remove the dependency array
 
 	const [currentSetIndex, setCurrentSetIndex] = useState(() => {
 		console.log("NewSessionForm: Calculating initialNonCompletedIndex");
@@ -82,23 +88,27 @@ export default function NewSessionForm({
 			console.log("NewSessionForm: Successful submission, updating state");
 			setIsUpdate(state.isUpdate || false);
 			setShowToast(state.isUpdate || false);
-			startTransition(() => {
-				const nextNonCompletedIndex = sortedSetData.findIndex(
-					(set, index) => index > currentSetIndex && !set.success
+
+			const updatedSetData = latestSetDataRef.current.map((set) =>
+				set.set_id === currentSet.set_id ? { ...set, ...state.updatedSet } : set
+			);
+			latestSetDataRef.current = updatedSetData;
+
+			const nextNonCompletedIndex = updatedSetData.findIndex(
+				(set, index) => index > currentSetIndex && !set.success
+			);
+			if (nextNonCompletedIndex !== -1) {
+				console.log(
+					`NewSessionForm: Moving to next non-completed set: ${updatedSetData[nextNonCompletedIndex].set_id}`
 				);
-				if (nextNonCompletedIndex !== -1) {
-					console.log(
-						`NewSessionForm: Moving to next non-completed set: ${sortedSetData[nextNonCompletedIndex].set_id}`
-					);
-					setCurrentSetIndex(nextNonCompletedIndex);
-				} else {
-					console.log("NewSessionForm: All sets completed");
-				}
-				isSubmittingRef.current = false;
-				router.refresh();
-			});
+				setCurrentSetIndex(nextNonCompletedIndex);
+			} else {
+				console.log("NewSessionForm: All sets completed");
+			}
+			isSubmittingRef.current = false;
+			router.refresh();
 		}
-	}, [state, currentSetIndex, sortedSetData, router, currentSet]);
+	}, [state, currentSetIndex, router, currentSet]);
 
 	// Add this new effect to reset showToast
 	useEffect(() => {
@@ -130,6 +140,7 @@ export default function NewSessionForm({
 				}
 			/>
 			<form
+				key={currentSet.set_id}
 				action={handleSubmit}
 				className="grid grid-cols-subgrid col-span-full gap-y-6 pb-28"
 			>
