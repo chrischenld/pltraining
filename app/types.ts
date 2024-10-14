@@ -44,4 +44,5 @@ export interface SetSubmissionState {
 	message: string;
 	success: boolean;
 	isUpdate?: boolean;
+	updatedSet?: Partial<Set>;
 }

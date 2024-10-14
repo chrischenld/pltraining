@@ -14,10 +14,9 @@ import NumberInput from "../base/NumberInput";
 import { submitSet } from "@/app/actions";
 import Button from "@/app/components/base/Button";
 import SetGrid from "./SetGrid";
-import { Session, Set } from "@/app/types";
+import { Session, Set, SetSubmissionState } from "@/app/types";
 import Counter from "@/app/components/base/Counter";
 import Toast from "@/app/components/base/Toast";
-import { SetSubmissionState } from "@/app/types";
 
 const initialState: SetSubmissionState = { message: "", success: false };
 
@@ -28,7 +27,7 @@ export default function NewSessionForm({
 	sessionData: Session;
 	setData: Set[];
 }) {
-	console.log("NewSessionForm: Component rendering");
+	console.log("NewSessionForm: Component rendering", { sessionData, setData });
 
 	const [state, formAction] = useFormState<SetSubmissionState, FormData>(
 		submitSet,
@@ -37,10 +36,10 @@ export default function NewSessionForm({
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const isSubmittingRef = useRef(false);
-	// const [isCompleted, setIsCompleted] = useState(false);
+	const renderCountRef = useRef(0);
 
 	const sortedSetData = useMemo(() => {
-		console.log("NewSessionForm: Sorting setData");
+		console.log("NewSessionForm: Sorting setData", setData);
 		return [...setData].sort((a, b) => a.set_id - b.set_id);
 	}, [setData]);
 
@@ -52,22 +51,9 @@ export default function NewSessionForm({
 
 	const currentSet = sortedSetData[currentSetIndex];
 
-	// can remove this?
-	useEffect(() => {
-		if (currentSetIndex === sortedSetData.length - 1 && currentSet?.success) {
-			// setIsCompleted(true);
-		}
-	}, [currentSetIndex, sortedSetData, currentSet]);
-
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
-			console.log("NewSessionForm: handleSubmit called");
-			// if (isSubmittingRef.current || isCompleted) {
-			// 	console.log(
-			// 		"NewSessionForm: Submission already in progress or completed, skipping"
-			// 	);
-			// 	return;
-			// }
+			console.log("NewSessionForm: handleSubmit called", { currentSet });
 			if (isSubmittingRef.current) {
 				console.log("NewSessionForm: Submission already in progress, skipping");
 				return;
@@ -82,18 +68,20 @@ export default function NewSessionForm({
 			formAction(formData);
 		},
 		[formAction, currentSet]
-		// [formAction, currentSet, isCompleted]
 	);
 
 	const [showToast, setShowToast] = useState(false);
 	const [isUpdate, setIsUpdate] = useState(false);
 
 	useEffect(() => {
-		console.log("NewSessionForm: state effect triggered", state);
+		console.log("NewSessionForm: state effect triggered", {
+			state,
+			currentSet,
+		});
 		if (state.success && isSubmittingRef.current) {
 			console.log("NewSessionForm: Successful submission, updating state");
 			setIsUpdate(state.isUpdate || false);
-			setShowToast(state.isUpdate || false); // Only show toast for updates
+			setShowToast(state.isUpdate || false);
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
@@ -105,30 +93,30 @@ export default function NewSessionForm({
 					setCurrentSetIndex(nextNonCompletedIndex);
 				} else {
 					console.log("NewSessionForm: All sets completed");
-					// setIsCompleted(true);
 				}
 				isSubmittingRef.current = false;
 				router.refresh();
 			});
 		}
-	}, [state, currentSetIndex, sortedSetData, router]);
+	}, [state, currentSetIndex, sortedSetData, router, currentSet]);
 
 	// Add this new effect to reset showToast
 	useEffect(() => {
 		if (showToast) {
 			const timer = setTimeout(() => {
 				setShowToast(false);
-			}, 2000); // Match this with the duration prop of your Toast component
+			}, 500);
 			return () => clearTimeout(timer);
 		}
 	}, [showToast]);
 
 	useEffect(() => {
-		console.log("State changed:", { state, currentSetIndex, showToast });
-		console.log("Current set:", sortedSetData[currentSetIndex]);
-	}, [state, currentSetIndex, showToast, sortedSetData]);
+		renderCountRef.current += 1;
+		console.log(`NewSessionForm render count: ${renderCountRef.current}`);
+		console.log("Current state:", { currentSetIndex, currentSet, setData });
+	});
 
-	console.log("NewSessionForm: Rendering form");
+	console.log("NewSessionForm: Rendering form", { currentSet });
 
 	return (
 		<>
@@ -136,7 +124,7 @@ export default function NewSessionForm({
 				id="toast"
 				message={state.message}
 				show={showToast}
-				duration={2000}
+				duration={500}
 				className={
 					state.success ? "bg-green-500 text-white" : "bg-red-500 text-white"
 				}

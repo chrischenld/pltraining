@@ -346,6 +346,7 @@ export const submitSet = async (
 				: "Set created successfully",
 			success: true,
 			isUpdate: isUpdate,
+			updatedSet: setData, // Add this line to return the updated set data
 		};
 	} catch (error) {
 		await sql`ROLLBACK`;

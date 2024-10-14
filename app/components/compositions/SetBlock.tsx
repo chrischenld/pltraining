@@ -21,6 +21,11 @@ export default function SetBlock({
 	primaryLiftType,
 	secondaryLiftType,
 }: SetBlockProps) {
+	console.log(
+		`SetBlock rendering: set_id=${set.set_id}, success=${set.success}, isSelected=${isSelected}`
+	);
+	console.log(`SetBlock data:`, set);
+
 	const { variant, textClass } = getSetStatus(set, isSelected);
 	const liftType =
 		set.lift_type === "PRIMARY" ? primaryLiftType : secondaryLiftType;
