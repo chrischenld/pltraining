@@ -65,7 +65,11 @@ export default async function Page({
 			<div className="grid grid-cols-subgrid col-span-full">
 				<h1 className="col-span-full">New Session</h1>
 			</div>
-			<NewSessionForm sessionData={sessionData} setData={setData} />
+			<NewSessionForm
+				key={sessionData.session_id}
+				sessionData={sessionData}
+				setData={setData}
+			/>
 		</div>
 	);
 }

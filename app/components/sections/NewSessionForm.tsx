@@ -14,9 +14,10 @@ import NumberInput from "../base/NumberInput";
 import { submitSet } from "@/app/actions";
 import Button from "@/app/components/base/Button";
 import SetGrid from "./SetGrid";
-import { Session, Set, SetSubmissionState } from "@/app/types";
+import { Session, Set } from "@/app/types";
 import Counter from "@/app/components/base/Counter";
 import Toast from "@/app/components/base/Toast";
+import { SetSubmissionState } from "@/app/types";
 
 const initialState: SetSubmissionState = { message: "", success: false };
 
@@ -27,7 +28,7 @@ export default function NewSessionForm({
 	sessionData: Session;
 	setData: Set[];
 }) {
-	console.log("NewSessionForm: Component rendering", { sessionData, setData });
+	console.log("NewSessionForm: Component rendering");
 
 	const [state, formAction] = useFormState<SetSubmissionState, FormData>(
 		submitSet,
@@ -36,18 +37,12 @@ export default function NewSessionForm({
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const isSubmittingRef = useRef(false);
-	const renderCountRef = useRef(0);
-
-	const latestSetDataRef = useRef(setData);
-
-	useEffect(() => {
-		latestSetDataRef.current = setData;
-	}, [setData]);
+	// const [isCompleted, setIsCompleted] = useState(false);
 
 	const sortedSetData = useMemo(() => {
-		console.log("NewSessionForm: Sorting setData", latestSetDataRef.current);
-		return [...latestSetDataRef.current].sort((a, b) => a.set_id - b.set_id);
-	}, []); // Remove the dependency array
+		console.log("NewSessionForm: Sorting setData");
+		return [...setData].sort((a, b) => a.set_id - b.set_id);
+	}, [setData]);
 
 	const [currentSetIndex, setCurrentSetIndex] = useState(() => {
 		console.log("NewSessionForm: Calculating initialNonCompletedIndex");
@@ -57,9 +52,22 @@ export default function NewSessionForm({
 
 	const currentSet = sortedSetData[currentSetIndex];
 
+	// can remove this?
+	// useEffect(() => {
+	// 	if (currentSetIndex === sortedSetData.length - 1 && currentSet?.success) {
+	// 		setIsCompleted(true);
+	// 	}
+	// }, [currentSetIndex, sortedSetData, currentSet]);
+
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
-			console.log("NewSessionForm: handleSubmit called", { currentSet });
+			console.log("NewSessionForm: handleSubmit called");
+			// if (isSubmittingRef.current || isCompleted) {
+			// 	console.log(
+			// 		"NewSessionForm: Submission already in progress or completed, skipping"
+			// 	);
+			// 	return;
+			// }
 			if (isSubmittingRef.current) {
 				console.log("NewSessionForm: Submission already in progress, skipping");
 				return;
@@ -74,59 +82,48 @@ export default function NewSessionForm({
 			formAction(formData);
 		},
 		[formAction, currentSet]
+		// [formAction, currentSet, isCompleted]
 	);
 
 	const [showToast, setShowToast] = useState(false);
 	const [isUpdate, setIsUpdate] = useState(false);
 
 	useEffect(() => {
-		console.log("NewSessionForm: state effect triggered", {
-			state,
-			currentSet,
-		});
+		console.log("NewSessionForm: state effect triggered", state);
 		if (state.success && isSubmittingRef.current) {
 			console.log("NewSessionForm: Successful submission, updating state");
 			setIsUpdate(state.isUpdate || false);
-			setShowToast(state.isUpdate || false);
-
-			const updatedSetData = latestSetDataRef.current.map((set) =>
-				set.set_id === currentSet.set_id ? { ...set, ...state.updatedSet } : set
-			);
-			latestSetDataRef.current = updatedSetData;
-
-			const nextNonCompletedIndex = updatedSetData.findIndex(
-				(set, index) => index > currentSetIndex && !set.success
-			);
-			if (nextNonCompletedIndex !== -1) {
-				console.log(
-					`NewSessionForm: Moving to next non-completed set: ${updatedSetData[nextNonCompletedIndex].set_id}`
+			setShowToast(state.isUpdate || false); // Only show toast for updates
+			startTransition(() => {
+				const nextNonCompletedIndex = sortedSetData.findIndex(
+					(set, index) => index > currentSetIndex && !set.success
 				);
-				setCurrentSetIndex(nextNonCompletedIndex);
-			} else {
-				console.log("NewSessionForm: All sets completed");
-			}
-			isSubmittingRef.current = false;
-			router.refresh();
+				if (nextNonCompletedIndex !== -1) {
+					console.log(
+						`NewSessionForm: Moving to next non-completed set: ${sortedSetData[nextNonCompletedIndex].set_id}`
+					);
+					setCurrentSetIndex(nextNonCompletedIndex);
+				} else {
+					console.log("NewSessionForm: All sets completed");
+					// setIsCompleted(true);
+				}
+				isSubmittingRef.current = false;
+				router.refresh();
+			});
 		}
-	}, [state, currentSetIndex, router, currentSet]);
+	}, [state, currentSetIndex, sortedSetData, router]);
 
 	// Add this new effect to reset showToast
 	useEffect(() => {
 		if (showToast) {
 			const timer = setTimeout(() => {
 				setShowToast(false);
-			}, 500);
+			}, 500); // Match this with the duration prop of your Toast component
 			return () => clearTimeout(timer);
 		}
 	}, [showToast]);
 
-	useEffect(() => {
-		renderCountRef.current += 1;
-		console.log(`NewSessionForm render count: ${renderCountRef.current}`);
-		console.log("Current state:", { currentSetIndex, currentSet, setData });
-	});
-
-	console.log("NewSessionForm: Rendering form", { currentSet });
+	console.log("NewSessionForm: Rendering form");
 
 	return (
 		<>
@@ -140,7 +137,6 @@ export default function NewSessionForm({
 				}
 			/>
 			<form
-				key={currentSet.set_id}
 				action={handleSubmit}
 				className="grid grid-cols-subgrid col-span-full gap-y-6 pb-28"
 			>

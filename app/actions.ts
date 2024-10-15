@@ -325,7 +325,7 @@ export const submitSet = async (
 				WHERE SESSION_ID = ${sessionId}
 			`;
 			console.log(`submitSet: Marked session ${sessionId} as completed`);
-			revalidatePath("/powerlifting");
+			revalidatePath("/powerlifting/new-session");
 		} else {
 			console.log(
 				`Session ${sessionId} still has incomplete sets: ${incompleteCount}`
@@ -339,14 +339,13 @@ export const submitSet = async (
 				isUpdate ? "updated" : "created"
 			} set_id ${setId}`
 		);
-		revalidatePath("/powerlifting");
+		revalidatePath("/powerlifting/new-session");
 		return {
 			message: isUpdate
 				? "Set updated successfully"
 				: "Set created successfully",
 			success: true,
 			isUpdate: isUpdate,
-			updatedSet: setData, // Add this line to return the updated set data
 		};
 	} catch (error) {
 		await sql`ROLLBACK`;
