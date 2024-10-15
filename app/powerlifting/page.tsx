@@ -5,6 +5,8 @@ import { padSessionId } from "../util";
 import { Cycle, Session } from "@/app/types";
 import Button from "../components/base/Button";
 
+export const revalidate = 60; // revalidate every 60 seconds
+
 const CycleTitle = ({ cycle }: { cycle: Cycle | null }) => {
 	if (!cycle) return <p className="col-span-full">No Cycle</p>;
 	return (

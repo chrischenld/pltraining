@@ -152,7 +152,6 @@ export default function NewSessionForm({
 				<input type="hidden" name="sessionId" value={sessionData.session_id} />
 				<div className="grid grid-cols-subgrid col-span-full">
 					<NumberInput
-						key={currentSet.set_id}
 						label="Weight"
 						id="weightPerformed"
 						name="weightPerformed"
@@ -161,7 +160,6 @@ export default function NewSessionForm({
 						className="grid grid-cols-subgrid col-span-full"
 					/>
 					<NumberInput
-						key={currentSet.set_id}
 						label="Reps"
 						id="repsPerformed-DISPLAY-ONLY"
 						name="repsPerformed-DISPLAY-ONLY"
@@ -171,7 +169,6 @@ export default function NewSessionForm({
 						isDisabled={true}
 					/>
 					<NumberInput
-						key={currentSet.set_id}
 						label="Percentage"
 						id="percentageProgrammed-DISPLAY-ONLY"
 						name="percentageProgrammed-DISPLAY-ONLY"
@@ -193,7 +190,6 @@ export default function NewSessionForm({
 						max={10}
 					/>
 					<Counter
-						key={currentSet.set_id}
 						count={currentSet.reps_programmed}
 						outerClassName="col-span-2 border-l-0"
 						className="aspect-square"

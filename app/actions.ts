@@ -321,10 +321,13 @@ export const submitSet = async (
 			// All sets are completed, update the session
 			await sql`
 				UPDATE Sessions
-				SET COMPLETED = true
+				SET COMPLETED = true,
+					DATE = CURRENT_DATE
 				WHERE SESSION_ID = ${sessionId}
 			`;
-			console.log(`submitSet: Marked session ${sessionId} as completed`);
+			console.log(
+				`submitSet: Marked session ${sessionId} as completed and set date`
+			);
 			revalidatePath("/powerlifting/new-session");
 		} else {
 			console.log(
