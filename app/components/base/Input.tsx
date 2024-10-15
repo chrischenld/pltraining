@@ -1,6 +1,7 @@
 "use client";
 
 import { GeistSans } from "geist/font/sans";
+import { ChangeEvent } from "react";
 
 interface InputProps {
 	label: string;
@@ -13,6 +14,8 @@ interface InputProps {
 	isInvalid?: boolean;
 	errorMessage?: string;
 	isDisabled?: boolean;
+	value?: string | number;
+	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 	[key: string]: any;
 }
 
@@ -27,6 +30,8 @@ export default function Input({
 	isInvalid,
 	isDisabled,
 	errorMessage,
+	value,
+	onChange,
 	...props
 }: InputProps): JSX.Element {
 	const errorId = `${id}-error`;
@@ -46,6 +51,8 @@ export default function Input({
 					aria-invalid={isInvalid}
 					aria-describedby={errorMessage ? errorId : undefined}
 					disabled={isDisabled}
+					value={value}
+					onChange={onChange}
 					{...props}
 				/>
 				<label

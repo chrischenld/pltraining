@@ -28,8 +28,6 @@ export default function NewSessionForm({
 	sessionData: Session;
 	setData: Set[];
 }) {
-	console.log("NewSessionForm: Component rendering");
-
 	const [state, formAction] = useFormState<SetSubmissionState, FormData>(
 		submitSet,
 		initialState
@@ -37,39 +35,34 @@ export default function NewSessionForm({
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const isSubmittingRef = useRef(false);
-	// const [isCompleted, setIsCompleted] = useState(false);
 
 	const sortedSetData = useMemo(() => {
-		console.log("NewSessionForm: Sorting setData");
 		return [...setData].sort((a, b) => a.set_id - b.set_id);
 	}, [setData]);
 
 	const [currentSetIndex, setCurrentSetIndex] = useState(() => {
-		console.log("NewSessionForm: Calculating initialNonCompletedIndex");
 		const index = sortedSetData.findIndex((set) => !set.success);
 		return index !== -1 ? index : sortedSetData.length - 1;
 	});
 
 	const currentSet = sortedSetData[currentSetIndex];
 
-	// can remove this?
-	// useEffect(() => {
-	// 	if (currentSetIndex === sortedSetData.length - 1 && currentSet?.success) {
-	// 		setIsCompleted(true);
-	// 	}
-	// }, [currentSetIndex, sortedSetData, currentSet]);
+	const [weightPerformed, setWeightPerformed] = useState(
+		currentSet.weight_programmed || 0
+	);
+	const [repsPerformed, setRepsPerformed] = useState(
+		currentSet.reps_programmed || 0
+	);
+
+	// Update state when currentSet changes
+	useEffect(() => {
+		setWeightPerformed(currentSet.weight_programmed || 0);
+		setRepsPerformed(currentSet.reps_programmed || 0);
+	}, [currentSet]);
 
 	const handleSubmit = useCallback(
 		(formData: FormData) => {
-			console.log("NewSessionForm: handleSubmit called");
-			// if (isSubmittingRef.current || isCompleted) {
-			// 	console.log(
-			// 		"NewSessionForm: Submission already in progress or completed, skipping"
-			// 	);
-			// 	return;
-			// }
 			if (isSubmittingRef.current) {
-				console.log("NewSessionForm: Submission already in progress, skipping");
 				return;
 			}
 
@@ -82,30 +75,21 @@ export default function NewSessionForm({
 			formAction(formData);
 		},
 		[formAction, currentSet]
-		// [formAction, currentSet, isCompleted]
 	);
 
 	const [showToast, setShowToast] = useState(false);
 	const [isUpdate, setIsUpdate] = useState(false);
 
 	useEffect(() => {
-		console.log("NewSessionForm: state effect triggered", state);
 		if (state.success && isSubmittingRef.current) {
-			console.log("NewSessionForm: Successful submission, updating state");
 			setIsUpdate(state.isUpdate || false);
-			setShowToast(state.isUpdate || false); // Only show toast for updates
+			setShowToast(state.isUpdate || false);
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
 				);
 				if (nextNonCompletedIndex !== -1) {
-					console.log(
-						`NewSessionForm: Moving to next non-completed set: ${sortedSetData[nextNonCompletedIndex].set_id}`
-					);
 					setCurrentSetIndex(nextNonCompletedIndex);
-				} else {
-					console.log("NewSessionForm: All sets completed");
-					// setIsCompleted(true);
 				}
 				isSubmittingRef.current = false;
 				router.refresh();
@@ -113,17 +97,14 @@ export default function NewSessionForm({
 		}
 	}, [state, currentSetIndex, sortedSetData, router]);
 
-	// Add this new effect to reset showToast
 	useEffect(() => {
 		if (showToast) {
 			const timer = setTimeout(() => {
 				setShowToast(false);
-			}, 500); // Match this with the duration prop of your Toast component
+			}, 500);
 			return () => clearTimeout(timer);
 		}
 	}, [showToast]);
-
-	console.log("NewSessionForm: Rendering form");
 
 	return (
 		<>
@@ -155,24 +136,25 @@ export default function NewSessionForm({
 						label="Weight"
 						id="weightPerformed"
 						name="weightPerformed"
-						defaultValue={currentSet.weight_programmed || 0}
+						value={weightPerformed}
+						onChange={(e) => setWeightPerformed(Number(e.target.value))}
 						min={0}
 						className="grid grid-cols-subgrid col-span-full"
 					/>
 					<NumberInput
 						label="Reps"
-						id="repsPerformed-DISPLAY-ONLY"
-						name="repsPerformed-DISPLAY-ONLY"
-						defaultValue={currentSet.reps_programmed || 0}
+						id="repsPerformed"
+						name="repsPerformed"
+						value={repsPerformed}
+						onChange={(e) => setRepsPerformed(Number(e.target.value))}
 						className="grid grid-cols-subgrid col-span-full"
 						outerClassName="border-t-0"
-						isDisabled={true}
 					/>
 					<NumberInput
 						label="Percentage"
 						id="percentageProgrammed-DISPLAY-ONLY"
 						name="percentageProgrammed-DISPLAY-ONLY"
-						defaultValue={currentSet.weight_percentage_programmed || 0}
+						value={currentSet.weight_percentage_programmed || 0}
 						className="grid grid-cols-subgrid col-span-full"
 						outerClassName="border-t-0"
 						isDisabled={true}

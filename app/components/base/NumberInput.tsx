@@ -1,12 +1,14 @@
 "use client";
 
 import Input from "./Input";
+import { ChangeEvent } from "react";
 
 interface NumberInputProps {
 	label: string;
 	id?: string;
 	name?: string;
-	defaultValue?: number;
+	value?: number;
+	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 	min?: number;
 	max?: number;
 	className?: string;
@@ -22,7 +24,8 @@ export default function NumberInput({
 	label,
 	id,
 	name,
-	defaultValue,
+	value,
+	onChange,
 	min,
 	max,
 	className,
@@ -39,7 +42,8 @@ export default function NumberInput({
 			label={label}
 			id={id}
 			name={name}
-			defaultValue={defaultValue}
+			value={value}
+			onChange={onChange}
 			min={min}
 			max={max}
 			pattern="[0-9]*"
