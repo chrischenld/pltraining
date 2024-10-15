@@ -175,6 +175,12 @@ function getSetDetails(sessionNumber: number, isPrimary: boolean) {
 	return { setCount, reps, percentages };
 }
 
+function customRound(value: number): number {
+	const base = Math.floor(value / 5) * 5;
+	const remainder = value % 5;
+	return remainder >= 3 ? base + 5 : base;
+}
+
 async function createSetsForLift(
 	sessionId: number,
 	liftType: LiftType,
@@ -202,9 +208,8 @@ async function createSetsForLift(
 	for (let i = 0; i < setCount; i++) {
 		const weightPercentage = percentages[i];
 		const repsProgram = reps[i];
-		const weightProgrammed = Math.round(
-			(selectedTrainingMax * weightPercentage) / 100
-		);
+		const exactWeight = (selectedTrainingMax * weightPercentage) / 100;
+		const weightProgrammed = customRound(exactWeight);
 
 		await sql`
       INSERT INTO Sets (
