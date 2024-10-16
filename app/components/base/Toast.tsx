@@ -35,7 +35,7 @@ export default function Toast({
 			ref={toastRef}
 			id={id}
 			popover="auto"
-			className={`fixed top-3 right-3 p-4 rounded shadow-lg ${className}`}
+			className={`fixed top-3 right-3 p-4 rounded shadow-lg bg-gray-3 border border-gray-6 text-sm ${className}`}
 		>
 			{message}
 		</div>

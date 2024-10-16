@@ -2,6 +2,18 @@
 
 import { useState, useEffect } from "react";
 
+interface CounterProps {
+	count: number;
+	outerClassName?: string;
+	className?: string;
+	id?: string;
+	name?: string;
+	increment?: number;
+	min?: number;
+	max?: number;
+	onChange?: (newValue: number) => void;
+}
+
 export default function Counter({
 	count,
 	outerClassName,
@@ -11,16 +23,8 @@ export default function Counter({
 	increment = 1,
 	min = 0,
 	max = 9,
-}: {
-	count: number;
-	outerClassName?: string;
-	className?: string;
-	id?: string;
-	name?: string;
-	increment?: number;
-	min?: number;
-	max?: number;
-}) {
+	onChange,
+}: CounterProps) {
 	const [value, setValue] = useState(count);
 
 	useEffect(() => {
@@ -29,7 +33,11 @@ export default function Counter({
 
 	const handleIncrement = () => {
 		const newValue = value + increment;
-		setValue(newValue > max ? min : newValue);
+		const finalValue = newValue > max ? min : newValue;
+		setValue(finalValue);
+		if (onChange) {
+			onChange(finalValue);
+		}
 	};
 
 	return (

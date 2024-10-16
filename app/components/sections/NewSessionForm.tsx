@@ -80,6 +80,8 @@ export default function NewSessionForm({
 	const [showToast, setShowToast] = useState(false);
 	const [isUpdate, setIsUpdate] = useState(false);
 
+	const toastDuration = 1000;
+
 	useEffect(() => {
 		if (state.success && isSubmittingRef.current) {
 			setIsUpdate(state.isUpdate || false);
@@ -101,7 +103,7 @@ export default function NewSessionForm({
 		if (showToast) {
 			const timer = setTimeout(() => {
 				setShowToast(false);
-			}, 500);
+			}, toastDuration);
 			return () => clearTimeout(timer);
 		}
 	}, [showToast]);
@@ -112,10 +114,8 @@ export default function NewSessionForm({
 				id="toast"
 				message={state.message}
 				show={showToast}
-				duration={500}
-				className={
-					state.success ? "bg-green-500 text-white" : "bg-red-500 text-white"
-				}
+				duration={toastDuration}
+				className={state.success ? "text-fg-success" : "text-fg-danger"}
 			/>
 			<form
 				action={handleSubmit}
@@ -143,12 +143,12 @@ export default function NewSessionForm({
 					/>
 					<NumberInput
 						label="Reps"
-						id="repsPerformed"
-						name="repsPerformed"
+						id="repsPerformed-DISPLAY-ONLY"
+						name="repsPerformed-DISPLAY-ONLY"
 						value={repsPerformed}
-						onChange={(e) => setRepsPerformed(Number(e.target.value))}
 						className="grid grid-cols-subgrid col-span-full"
 						outerClassName="border-t-0"
+						isDisabled={true}
 					/>
 					<NumberInput
 						label="Percentage"
@@ -172,11 +172,12 @@ export default function NewSessionForm({
 						max={10}
 					/>
 					<Counter
-						count={currentSet.reps_programmed}
+						count={repsPerformed}
 						outerClassName="col-span-2 border-l-0"
 						className="aspect-square"
 						id="repsPerformed"
 						name="repsPerformed"
+						onChange={(newValue) => setRepsPerformed(newValue)}
 					/>
 					<div className="p-1 border border-gray-3 border-l-0 col-span-6 md:col-span-20">
 						<Button

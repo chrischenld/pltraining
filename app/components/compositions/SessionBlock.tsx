@@ -36,16 +36,22 @@ export default function SessionBlock({
 	);
 
 	const handleSelect = () => {
-		if (!session.completed && !isNewCyclePrompt) {
+		if (!isNewCyclePrompt) {
 			onSelect(session.session_id);
 		}
 	};
 
 	return (
 		<Block
-			variant={isSelected ? "selected" : variant}
+			variant={
+				isSelected && session.completed
+					? "completedSelected"
+					: isSelected
+					? "selected"
+					: variant
+			}
 			onSelect={handleSelect}
-			isSelectable={!session.completed && !isNewCyclePrompt}
+			isSelectable={!isNewCyclePrompt}
 			className={`${className} grid-rows-8 grid-cols-8`}
 			outerClassName={outerClassName}
 			paddingSize="p-2"
