@@ -27,13 +27,16 @@ export default function Counter({
 }: CounterProps) {
 	const [value, setValue] = useState(count);
 
-	useEffect(() => {
-		setValue(count);
-	}, [count]);
-
 	const handleIncrement = () => {
 		const newValue = value + increment;
-		const finalValue = newValue > max ? min : newValue;
+		let finalValue;
+		if (newValue > max) {
+			finalValue = min;
+		} else if (newValue < min) {
+			finalValue = max;
+		} else {
+			finalValue = newValue;
+		}
 		setValue(finalValue);
 		if (onChange) {
 			onChange(finalValue);

@@ -15,6 +15,7 @@ interface BlockProps {
 	className?: string;
 	outerClassName?: string;
 	paddingSize?: string;
+	isSquare?: boolean;
 }
 
 export default function Block({
@@ -25,6 +26,7 @@ export default function Block({
 	className,
 	outerClassName,
 	paddingSize = "p-2",
+	isSquare = true,
 }: BlockProps) {
 	const variants = {
 		default: "border-gray-6 bg-gray-2",
@@ -47,7 +49,11 @@ export default function Block({
 			onClick={handleClick}
 		>
 			<div
-				className={`grid aspect-square rounded-[0.125rem] border align-items tracking-wider ${variants[variant]} ${className}`}
+				className={`grid ${
+					isSquare ? "aspect-square" : "aspect-auto"
+				} rounded-[0.125rem] border align-items tracking-wider ${
+					variants[variant]
+				} ${className}`}
 			>
 				{children}
 			</div>
