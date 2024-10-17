@@ -333,7 +333,37 @@ export const submitSet = async (
 			console.log(
 				`submitSet: Marked session ${sessionId} as completed and set date`
 			);
+
+			// Check if all sessions in the cycle are complete
+			const cycleResult = await sql`
+				SELECT c.CYCLE_ID, 
+					   (SELECT COUNT(*) FROM Sessions s WHERE s.CYCLE_ID = c.CYCLE_ID) as total_sessions,
+					   (SELECT COUNT(*) FROM Sessions s WHERE s.CYCLE_ID = c.CYCLE_ID AND s.COMPLETED = true) as completed_sessions
+				FROM Sessions s
+				JOIN Cycles c ON s.CYCLE_ID = c.CYCLE_ID
+				WHERE s.SESSION_ID = ${sessionId}
+			`;
+
+			const { cycle_id, total_sessions, completed_sessions } =
+				cycleResult.rows[0];
+
+			if (total_sessions === completed_sessions) {
+				console.log(
+					`All sessions completed for cycle ${cycle_id}, updating cycle status`
+				);
+				await sql`
+					UPDATE Cycles
+					SET COMPLETED = true,
+						END_DATE = CURRENT_DATE
+					WHERE CYCLE_ID = ${cycle_id}
+				`;
+				console.log(
+					`submitSet: Marked cycle ${cycle_id} as completed and set end date`
+				);
+			}
+
 			revalidatePath("/powerlifting/new-session");
+			revalidatePath("/powerlifting");
 		} else {
 			console.log(
 				`Session ${sessionId} still has incomplete sets: ${incompleteCount}`

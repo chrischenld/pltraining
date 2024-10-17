@@ -76,7 +76,7 @@ export default async function Page() {
 				<h1 className="col-span-full">Powerlifting</h1>
 				<CycleTitle cycle={lastCycle} />
 			</div>
-			{!lastCycle || lastCycle.completed ? (
+			{!lastCycle || lastCycle.completed || lastCycle.end_date !== null ? (
 				<NewCyclePrompt sessions={sessionDataRows} />
 			) : sessionDataRows.length === 0 ? (
 				<NoSessionsError />

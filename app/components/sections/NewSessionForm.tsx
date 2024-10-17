@@ -100,14 +100,10 @@ export default function NewSessionForm({
 
 	const toastDuration = 1000;
 
-	const [isTransitioning, setIsTransitioning] = useState(false);
-
 	useEffect(() => {
 		if (state.success && isSubmittingRef.current) {
-			setIsTransitioning(true);
 			setIsUpdate(state.isUpdate || false);
 			setShowToast(state.isUpdate || false);
-
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
@@ -117,7 +113,6 @@ export default function NewSessionForm({
 				}
 				isSubmittingRef.current = false;
 				router.refresh();
-				setIsTransitioning(false);
 			});
 		}
 	}, [state, currentSetIndex, sortedSetData, router]);
@@ -231,12 +226,60 @@ export default function NewSessionForm({
 				<input type="hidden" name="setId" value={currentSet.set_id} />
 				<input type="hidden" name="sessionId" value={sessionData.session_id} />
 				<div
-					className={`grid grid-cols-subgrid grid-rows-3 transition-all duration-1200 ease-in-out ${
-						!isTransitioning &&
-						currentSet.weight_performed &&
-						currentSet.reps_performed
-							? "col-span-4"
-							: "col-span-full"
+					className={`grid grid-cols-subgrid grid-rows-3 col-span-full ${
+						sessionData.completed === true ? "hidden" : "block"
+					}`}
+				>
+					<NumberInput
+						label={`${
+							currentSet.weight_programmed &&
+							weightPerformed > currentSet.weight_programmed
+								? "Weight (OVR)"
+								: currentSet.weight_programmed &&
+								  weightPerformed < currentSet.weight_programmed
+								? "Weight (FAIL)"
+								: "Weight"
+						}`}
+						id="weightPerformed"
+						name="weightPerformed"
+						value={weightPerformed}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setWeightPerformed(Number(e.target.value))
+						}
+						min={0}
+						className={`grid grid-cols-subgrid col-span-full`}
+						outerClassName="px-1 py-1 row-span-1"
+					/>
+					<NumberInput
+						label={`${
+							currentSet.reps_programmed &&
+							repsPerformed > currentSet.reps_programmed
+								? "Reps (OVR)"
+								: currentSet.reps_programmed &&
+								  repsPerformed < currentSet.reps_programmed
+								? "Reps (FAIL)"
+								: "Reps"
+						}`}
+						id="repsPerformed-DISPLAY-ONLY"
+						name="repsPerformed-DISPLAY-ONLY"
+						value={repsPerformed}
+						className="grid grid-cols-subgrid col-span-full"
+						outerClassName="border-t-0 px-1 py-1"
+						isDisabled={true}
+					/>
+					<NumberInput
+						label="RPE"
+						id="rpe-DISPLAY-ONLY"
+						name="rpe-DISPLAY-ONLY"
+						value={rpePerformed}
+						className="grid grid-cols-subgrid col-span-full"
+						outerClassName="border-t-0 px-1 py-1"
+						isDisabled={true}
+					/>
+				</div>
+				<div
+					className={`grid grid-cols-subgrid grid-rows-3 col-span-4 ${
+						sessionData.completed === true ? "block" : "hidden"
 					}`}
 				>
 					<NumberInput
@@ -287,13 +330,7 @@ export default function NewSessionForm({
 					/>
 				</div>
 				<ProgrammedFields
-					className={`transition-opacity duration-1200 ease-in-out ${
-						!isTransitioning &&
-						currentSet.weight_performed &&
-						currentSet.reps_performed
-							? "opacity-100"
-							: "opacity-0"
-					}`}
+					className={`${sessionData.completed === true ? "block" : "hidden"}`}
 				/>
 				<ActionBar />
 			</form>
