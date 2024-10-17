@@ -3,6 +3,8 @@ import { z } from "zod";
 import { Session, Set } from "@/app/types";
 import NewSessionForm from "@/app/components/sections/NewSessionForm";
 
+export const revalidate = 5; // revalidate every 5 seconds
+
 const SetSchema = z.object({
 	set_id: z.coerce.number(),
 	session_id: z.coerce.number(),

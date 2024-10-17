@@ -100,10 +100,14 @@ export default function NewSessionForm({
 
 	const toastDuration = 1000;
 
+	const [isTransitioning, setIsTransitioning] = useState(false);
+
 	useEffect(() => {
 		if (state.success && isSubmittingRef.current) {
+			setIsTransitioning(true);
 			setIsUpdate(state.isUpdate || false);
 			setShowToast(state.isUpdate || false);
+
 			startTransition(() => {
 				const nextNonCompletedIndex = sortedSetData.findIndex(
 					(set, index) => index > currentSetIndex && !set.success
@@ -113,6 +117,7 @@ export default function NewSessionForm({
 				}
 				isSubmittingRef.current = false;
 				router.refresh();
+				setIsTransitioning(false);
 			});
 		}
 	}, [state, currentSetIndex, sortedSetData, router]);
@@ -226,8 +231,10 @@ export default function NewSessionForm({
 				<input type="hidden" name="setId" value={currentSet.set_id} />
 				<input type="hidden" name="sessionId" value={sessionData.session_id} />
 				<div
-					className={`grid grid-cols-subgrid grid-rows-3 ${
-						currentSet.weight_performed && currentSet.reps_performed
+					className={`grid grid-cols-subgrid grid-rows-3 transition-all duration-1200 ease-in-out ${
+						!isTransitioning &&
+						currentSet.weight_performed &&
+						currentSet.reps_performed
 							? "col-span-4"
 							: "col-span-full"
 					}`}
@@ -280,10 +287,12 @@ export default function NewSessionForm({
 					/>
 				</div>
 				<ProgrammedFields
-					className={`${
-						currentSet.weight_performed && currentSet.reps_performed
-							? "block"
-							: "hidden"
+					className={`transition-opacity duration-1200 ease-in-out ${
+						!isTransitioning &&
+						currentSet.weight_performed &&
+						currentSet.reps_performed
+							? "opacity-100"
+							: "opacity-0"
 					}`}
 				/>
 				<ActionBar />
