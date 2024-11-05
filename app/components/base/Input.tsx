@@ -1,7 +1,7 @@
 "use client";
 
 import { GeistSans } from "geist/font/sans";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 
 interface InputProps {
 	label: string;
@@ -36,6 +36,21 @@ export default function Input({
 }: InputProps): JSX.Element {
 	const errorId = `${id}-error`;
 
+	const [state, setState] = useState(value);
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setState(e.target.value);
+	};
+
+	const handleBlur = () => {
+		const changeEvent = {
+			target: {
+				value: state,
+			},
+		};
+
+		onChange?.(changeEvent as any);
+	};
+
 	return (
 		<div
 			className={`grid grid-cols-subgrid col-span-full p-2 border border-gray-3 ${outerClassName}`}
@@ -51,8 +66,9 @@ export default function Input({
 					aria-invalid={isInvalid}
 					aria-describedby={errorMessage ? errorId : undefined}
 					disabled={isDisabled}
-					value={value}
-					onChange={onChange}
+					value={state}
+					onChange={handleChange}
+					onBlur={handleBlur}
 					{...props}
 				/>
 				<label

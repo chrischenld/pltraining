@@ -20,6 +20,7 @@ import Toast from "@/app/components/base/Toast";
 import { SetSubmissionState } from "@/app/types";
 import Block from "../base/Block";
 import { GeistSans } from "geist/font/sans";
+import styles from "./NewSessionForm.module.css";
 
 const initialState: SetSubmissionState = { message: "", success: false };
 
@@ -126,9 +127,64 @@ export default function NewSessionForm({
 		}
 	}, [showToast]);
 
-	const ProgrammedFields = ({ className }: { className?: string }) => (
+	const InputFields = ({ className }: { className?: string }) => (
+		<div className={`grid grid-cols-subgrid grid-rows-3 ${className}`}>
+			<NumberInput
+				label={`${
+					currentSet.weight_programmed &&
+					weightPerformed > currentSet.weight_programmed
+						? "Weight (OVR)"
+						: currentSet.weight_programmed &&
+						  weightPerformed < currentSet.weight_programmed
+						? "Weight (FAIL)"
+						: "Weight"
+				}`}
+				id="weightPerformed"
+				name="weightPerformed"
+				value={weightPerformed}
+				onChange={(value: number) => setWeightPerformed(value)}
+				min={0}
+				className={`grid grid-cols-subgrid col-span-full`}
+				outerClassName="px-1 py-1 row-span-1"
+			/>
+			<NumberInput
+				label={`${
+					currentSet.reps_programmed &&
+					repsPerformed > currentSet.reps_programmed
+						? "Reps (OVR)"
+						: currentSet.reps_programmed &&
+						  repsPerformed < currentSet.reps_programmed
+						? "Reps (FAIL)"
+						: "Reps"
+				}`}
+				id="repsPerformed-DISPLAY-ONLY"
+				name="repsPerformed-DISPLAY-ONLY"
+				value={repsPerformed}
+				className="grid grid-cols-subgrid col-span-full"
+				outerClassName="border-t-0 px-1 py-1"
+				isDisabled={true}
+			/>
+			<NumberInput
+				label="RPE"
+				id="rpe-DISPLAY-ONLY"
+				name="rpe-DISPLAY-ONLY"
+				value={rpePerformed}
+				className="grid grid-cols-subgrid col-span-full"
+				outerClassName="border-t-0 px-1 py-1"
+				isDisabled={true}
+			/>
+		</div>
+	);
+
+	const ProgrammedFields = ({
+		className,
+		transitionClass,
+	}: {
+		className?: string;
+		transitionClass?: string;
+	}) => (
 		<div
-			className={`grid grid-cols-subgrid grid-rows-3 col-span-4 ${className}`}
+			className={`grid grid-cols-subgrid grid-rows-3 col-span-4 ${className} ${transitionClass}`}
 		>
 			<Block
 				className="relative aspect-auto"
@@ -180,7 +236,8 @@ export default function NewSessionForm({
 				onChange={(newValue) => setRpePerformed(newValue)}
 				increment={0.5}
 				min={5}
-				max={10}
+				max={9.5}
+				showDecimal={true}
 			/>
 			<Counter
 				count={repsPerformed}
@@ -202,6 +259,8 @@ export default function NewSessionForm({
 		</div>
 	);
 
+	const [testCount, setTestCount] = useState(10);
+
 	return (
 		<>
 			<Toast
@@ -212,7 +271,7 @@ export default function NewSessionForm({
 				className={state.success ? "text-fg-success" : "text-fg-danger"}
 			/>
 			<form
-				action={handleSubmit}
+				action={handleSubmit as any}
 				className="grid grid-cols-subgrid col-span-full gap-y-6 pb-28"
 			>
 				<SetGrid
@@ -225,113 +284,16 @@ export default function NewSessionForm({
 				/>
 				<input type="hidden" name="setId" value={currentSet.set_id} />
 				<input type="hidden" name="sessionId" value={sessionData.session_id} />
-				<div
-					className={`grid grid-cols-subgrid grid-rows-3 col-span-full ${
-						sessionData.completed === true ? "hidden" : "block"
-					}`}
-				>
-					<NumberInput
-						label={`${
-							currentSet.weight_programmed &&
-							weightPerformed > currentSet.weight_programmed
-								? "Weight (OVR)"
-								: currentSet.weight_programmed &&
-								  weightPerformed < currentSet.weight_programmed
-								? "Weight (FAIL)"
-								: "Weight"
-						}`}
-						id="weightPerformed"
-						name="weightPerformed"
-						value={weightPerformed}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setWeightPerformed(Number(e.target.value))
-						}
-						min={0}
-						className={`grid grid-cols-subgrid col-span-full`}
-						outerClassName="px-1 py-1 row-span-1"
+				{!sessionData.completed ? (
+					<InputFields
+						className={`col-span-full ${styles.transitionElement}`}
 					/>
-					<NumberInput
-						label={`${
-							currentSet.reps_programmed &&
-							repsPerformed > currentSet.reps_programmed
-								? "Reps (OVR)"
-								: currentSet.reps_programmed &&
-								  repsPerformed < currentSet.reps_programmed
-								? "Reps (FAIL)"
-								: "Reps"
-						}`}
-						id="repsPerformed-DISPLAY-ONLY"
-						name="repsPerformed-DISPLAY-ONLY"
-						value={repsPerformed}
-						className="grid grid-cols-subgrid col-span-full"
-						outerClassName="border-t-0 px-1 py-1"
-						isDisabled={true}
-					/>
-					<NumberInput
-						label="RPE"
-						id="rpe-DISPLAY-ONLY"
-						name="rpe-DISPLAY-ONLY"
-						value={rpePerformed}
-						className="grid grid-cols-subgrid col-span-full"
-						outerClassName="border-t-0 px-1 py-1"
-						isDisabled={true}
-					/>
-				</div>
-				<div
-					className={`grid grid-cols-subgrid grid-rows-3 col-span-4 ${
-						sessionData.completed === true ? "block" : "hidden"
-					}`}
-				>
-					<NumberInput
-						label={`${
-							currentSet.weight_programmed &&
-							weightPerformed > currentSet.weight_programmed
-								? "Weight (OVR)"
-								: currentSet.weight_programmed &&
-								  weightPerformed < currentSet.weight_programmed
-								? "Weight (FAIL)"
-								: "Weight"
-						}`}
-						id="weightPerformed"
-						name="weightPerformed"
-						value={weightPerformed}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setWeightPerformed(Number(e.target.value))
-						}
-						min={0}
-						className={`grid grid-cols-subgrid col-span-full`}
-						outerClassName="px-1 py-1 row-span-1"
-					/>
-					<NumberInput
-						label={`${
-							currentSet.reps_programmed &&
-							repsPerformed > currentSet.reps_programmed
-								? "Reps (OVR)"
-								: currentSet.reps_programmed &&
-								  repsPerformed < currentSet.reps_programmed
-								? "Reps (FAIL)"
-								: "Reps"
-						}`}
-						id="repsPerformed-DISPLAY-ONLY"
-						name="repsPerformed-DISPLAY-ONLY"
-						value={repsPerformed}
-						className="grid grid-cols-subgrid col-span-full"
-						outerClassName="border-t-0 px-1 py-1"
-						isDisabled={true}
-					/>
-					<NumberInput
-						label="RPE"
-						id="rpe-DISPLAY-ONLY"
-						name="rpe-DISPLAY-ONLY"
-						value={rpePerformed}
-						className="grid grid-cols-subgrid col-span-full"
-						outerClassName="border-t-0 px-1 py-1"
-						isDisabled={true}
-					/>
-				</div>
-				<ProgrammedFields
-					className={`${sessionData.completed === true ? "block" : "hidden"}`}
-				/>
+				) : (
+					<>
+						<InputFields className={`col-span-4 ${styles.transitionElement}`} />
+						<ProgrammedFields className={styles.transitionElement} />
+					</>
+				)}
 				<ActionBar />
 			</form>
 		</>

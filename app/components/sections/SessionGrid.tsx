@@ -5,17 +5,20 @@ import SessionBlock from "../compositions/SessionBlock";
 import Button from "@/app/components/base/Button";
 import { Session } from "@/app/types";
 import { padSessionId } from "@/app/util";
+import Link from "next/link";
 
 interface SessionGridProps {
 	sessions: Session[];
 	isNewCyclePrompt?: boolean;
 	gridSpanClassName?: string;
+	newSessionButton?: boolean;
 }
 
 export default function SessionGrid({
 	sessions,
 	isNewCyclePrompt = false,
 	gridSpanClassName,
+	newSessionButton = true,
 }: SessionGridProps) {
 	const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
 		null
@@ -99,15 +102,23 @@ export default function SessionGrid({
 				})}
 			</div>
 			<input type="hidden" name="sessionId" value={selectedSessionId || ""} />
-			<div className="p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
-				<Button
-					label={buttonLabel}
-					loading="Loading..."
-					completed="Started"
-					className="w-full"
-					disabled={!selectedSessionId}
-				/>
-			</div>
+			{newSessionButton ? (
+				<div className="p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
+					<Button
+						label={buttonLabel}
+						loading="Loading..."
+						completed="Started"
+						className="w-full"
+						disabled={!selectedSessionId}
+					/>
+				</div>
+			) : (
+				<div className="p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
+					<Link href="/powerlifting/new-cycle">
+						<Button label="Start new cycle →" className="w-full" />
+					</Link>
+				</div>
+			)}
 		</form>
 	);
 }
