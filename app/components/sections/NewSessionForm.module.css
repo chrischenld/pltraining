@@ -1,0 +1,18 @@
+.transitionElement {
+	transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.fadeOut {
+	opacity: 0;
+	transform: translateY(10px);
+	pointer-events: none;
+}
+
+.fadeIn {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.remove {
+	display: none;
+}

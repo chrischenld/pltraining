@@ -20,13 +20,13 @@ const NewCyclePrompt = ({ sessions }: { sessions: Session[] }) => {
 	return (
 		<>
 			<div className="grid col-span-full grid-cols-subgrid ">
-				<SessionGrid sessions={sessions} isNewCyclePrompt={true} />
+				<SessionGrid
+					sessions={sessions}
+					gridSpanClassName="col-span-4"
+					isNewCyclePrompt={true}
+					newSessionButton={false}
+				/>
 			</div>
-			<footer className="grid grid-cols-subgrid col-span-full p-2 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
-				<Link href="/powerlifting/new-cycle">
-					<Button className="w-full" label="Start new cycle →" />
-				</Link>
-			</footer>
 		</>
 	);
 };

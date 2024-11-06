@@ -144,3 +144,23 @@ footer {
 	grid-template-columns: subgrid;
 	min-width: 0; /* Allow grid items to shrink below their minimum content size */
 }
+
+/* number-flow-react {
+	justify-content: flex-end;
+} */
+
+.chrisshadowdomclass {
+	margin-right: 0 !important;
+}
+
+number-flow-react.number-flow-right span.number__inner {
+	padding: 0 !important;
+}
+
+number-flow-react::part(number) {
+	margin: 0;
+}
+
+number-flow-react::part(number__inner) {
+	padding: 0;
+}

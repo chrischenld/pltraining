@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import NumberFlow from "@number-flow/react";
 
 interface CounterProps {
 	count: number;
@@ -11,6 +12,7 @@ interface CounterProps {
 	increment?: number;
 	min?: number;
 	max?: number;
+	showDecimal?: boolean;
 	onChange?: (newValue: number) => void;
 }
 
@@ -23,12 +25,13 @@ export default function Counter({
 	increment = 1,
 	min = 0,
 	max = 9,
+	showDecimal = false,
 	onChange,
 }: CounterProps) {
-	const [value, setValue] = useState(count);
+	const [state, setState] = useState(count);
 
 	const handleIncrement = () => {
-		const newValue = value + increment;
+		const newValue = state + increment;
 		let finalValue;
 		if (newValue > max) {
 			finalValue = min;
@@ -37,10 +40,12 @@ export default function Counter({
 		} else {
 			finalValue = newValue;
 		}
-		setValue(finalValue);
-		if (onChange) {
-			onChange(finalValue);
-		}
+
+		setState(finalValue);
+	};
+
+	const handleBlur = () => {
+		onChange?.(state);
 	};
 
 	return (
@@ -48,19 +53,23 @@ export default function Counter({
 			<button
 				type="button"
 				onClick={handleIncrement}
+				onBlur={handleBlur}
 				className={`w-full border border-gray-6 text-center ${className}`}
-				aria-label={`Increment counter (current value: ${value})`}
+				aria-label={`Increment counter (current value: ${state})`}
 			>
-				<output
-					id={id}
-					name={name}
-					htmlFor={id}
-					className="text-sm w-full block tracking-[-0.1em]"
-				>
-					{value}
-				</output>
+				<NumberFlow
+					value={state}
+					trend={false}
+					animated={true}
+					willChange
+					className="tracking-tighter"
+					format={{
+						minimumFractionDigits: showDecimal ? 1 : 0,
+						maximumFractionDigits: showDecimal ? 1 : 0,
+					}}
+				/>
 			</button>
-			<input type="hidden" name={name} value={value} />
+			<input type="hidden" name={name} value={state} />
 		</div>
 	);
 }

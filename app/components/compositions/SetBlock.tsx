@@ -1,6 +1,8 @@
 import Block, { BlockVariant } from "@/app/components/base/Block";
 import { Set, LiftType } from "@/app/types";
 import { getSetStatus, getLiftTypeCode } from "@/app/util";
+import NumberFlow from "@number-flow/react";
+import { CSSProperties } from "react";
 
 interface SetBlockProps {
 	set: Set;
@@ -72,7 +74,9 @@ export default function SetBlock({
 					set.reps_performed &&
 					set.weight_programmed ? (
 						<>
-							<p className="text-gray-5 border-gray-3">lb</p>
+							<p className="text-gray-5 border-gray-3 inline-flex items-center">
+								lb
+							</p>
 							<p
 								className={`${
 									set.weight_performed >= set.weight_programmed
@@ -82,38 +86,64 @@ export default function SetBlock({
 							>
 								{set.weight_performed}
 							</p>
+							{/* <NumberFlow
+								willChange
+								continuous
+								value={set.weight_performed}
+								className={`${
+									set.weight_performed >= set.weight_programmed
+										? "text-fg-success"
+										: "text-fg-danger"
+								} number-flow-right tracking-widest w-full justify-end text-xs`}
+							/> */}
 						</>
 					) : (
 						<>
-							<p className="text-gray-5 border-gray-3">lb</p>
-							<p className="text-right ">{set.weight_programmed}</p>
+							<p className="text-gray-5 border-gray-3 inline-flex items-center">
+								lb
+							</p>
+							<p className="text-right">{set.weight_programmed}</p>
+							{/* <NumberFlow
+								willChange
+								continuous
+								value={set.weight_programmed || 0}
+								className="tracking-widest justify-end"
+							/> */}
 						</>
 					)}
 				</div>
 				<div className="grid grid-cols-subgrid col-span-full">
 					{set.weight_performed && set.reps_performed ? (
 						<>
-							<p className="text-gray-5 border-gray-3">rp</p>
+							<p className="text-gray-5 border-gray-3 inline-flex items-center">
+								rp
+							</p>
 							<p
 								className={`${
 									set.reps_performed >= set.reps_programmed
 										? "text-fg-success"
 										: "text-fg-danger"
-								} text-right`}
+								}  justify-end text-right inline-flex items-center`}
 							>
 								{set.reps_performed}
 							</p>
 						</>
 					) : (
 						<>
-							<p className="text-gray-5  border-gray-3">rp</p>
-							<p className="text-right">{set.reps_programmed}</p>
+							<p className="text-gray-5 border-gray-3 inline-flex items-center">
+								rp
+							</p>
+							<p className="justify-end text-right inline-flex items-center">
+								{set.reps_programmed}
+							</p>
 						</>
 					)}
 				</div>
 				<div className="grid grid-cols-subgrid col-span-full">
-					<p className="text-gray-5  border-gray-3">%%</p>
-					<p className="text-gray-5 text-right ">
+					<p className="text-gray-5 border-gray-3 inline-flex items-center">
+						%%
+					</p>
+					<p className="text-gray-5 justify-end text-right inline-flex items-center">
 						{set.weight_percentage_programmed}
 					</p>
 				</div>
