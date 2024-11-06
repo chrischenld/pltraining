@@ -124,6 +124,33 @@ const config: Config = {
 				fragmentMono: ["var(--font-fragment-mono)"],
 				pantasia: ["var(--font-pantasia)"],
 			},
+			keyframes: {
+				"fade-in-down": {
+					"0%": {
+						opacity: ".25",
+						transform: "translateY(-1rem)",
+					},
+					"100%": {
+						opacity: "1",
+						transform: "translateY(0)",
+					},
+				},
+				"slide-in": {
+					"0%": {
+						transform: "translateY(-1rem)",
+						opacity: "0.25",
+					},
+					"100%": {
+						transform: "translateX(0)",
+						opacity: "1",
+					},
+				},
+			},
+			animation: {
+				"fade-in-down":
+					"fade-in-down 0.3s cubic-bezier(0.52, -0.1, 0.66, 1.12)",
+				"slide-in": "slide-in 0.5s cubic-bezier(0.52, -0.1, 0.66, 1.12)",
+			},
 		},
 		screens: {
 			sm: "540px",

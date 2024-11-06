@@ -35,7 +35,12 @@ export default function Toast({
 			ref={toastRef}
 			id={id}
 			popover="auto"
-			className={`fixed top-3 right-3 p-4 rounded shadow-lg bg-gray-3 border border-gray-6 text-sm ${className}`}
+			className={`
+				fixed top-3 right-3 p-4 rounded shadow-lg bg-gray-3 border border-gray-6 text-sm
+				transition-all animate-fade-in-down
+				[animation-timing-function:cubic-bezier(0.52, -0.1, 0.66, 1.12)]
+				${className}
+			`}
 		>
 			{message}
 		</div>

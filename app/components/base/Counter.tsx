@@ -54,7 +54,7 @@ export default function Counter({
 				type="button"
 				onClick={handleIncrement}
 				onBlur={handleBlur}
-				className={`w-full border border-gray-6 text-center ${className}`}
+				className={`w-full border border-gray-6 text-center rounded-[0.125rem] ${className}`}
 				aria-label={`Increment counter (current value: ${state})`}
 			>
 				<NumberFlow

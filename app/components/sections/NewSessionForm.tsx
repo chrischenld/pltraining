@@ -176,15 +176,9 @@ export default function NewSessionForm({
 		</div>
 	);
 
-	const ProgrammedFields = ({
-		className,
-		transitionClass,
-	}: {
-		className?: string;
-		transitionClass?: string;
-	}) => (
+	const ProgrammedFields = ({ className }: { className?: string }) => (
 		<div
-			className={`grid grid-cols-subgrid grid-rows-3 col-span-4 ${className} ${transitionClass}`}
+			className={`grid grid-cols-subgrid grid-rows-3 col-span-4 ${className}`}
 		>
 			<Block
 				className="relative aspect-auto"
@@ -228,16 +222,19 @@ export default function NewSessionForm({
 	const ActionBar = () => (
 		<div className="grid grid-cols-10 md:grid-cols-24 col-span-full p-1 fixed bottom-0 left-0 right-0 bg-gray-2 border-t border-t-gray-6">
 			<Counter
-				count={rpePerformed}
+				count={weightPerformed}
 				outerClassName="col-span-2"
 				className="aspect-square"
-				id="rpePerformed"
-				name="rpePerformed"
-				onChange={(newValue) => setRpePerformed(newValue)}
-				increment={0.5}
-				min={5}
-				max={9.5}
-				showDecimal={true}
+				id="weightPerformed"
+				name="weightPerformed"
+				increment={5}
+				min={
+					currentSet.weight_programmed ? currentSet.weight_programmed - 100 : 0
+				}
+				max={
+					currentSet.weight_programmed ? currentSet.weight_programmed + 100 : 0
+				}
+				onChange={(newValue) => setWeightPerformed(newValue)}
 			/>
 			<Counter
 				count={repsPerformed}
@@ -247,19 +244,29 @@ export default function NewSessionForm({
 				name="repsPerformed"
 				onChange={(newValue) => setRepsPerformed(newValue)}
 			/>
-			<div className="p-1 border border-gray-3 border-l-0 col-span-6 md:col-span-20">
+			<Counter
+				count={rpePerformed}
+				outerClassName="col-span-2 border-l-0"
+				className="aspect-square"
+				id="rpePerformed"
+				name="rpePerformed"
+				onChange={(newValue) => setRpePerformed(newValue)}
+				increment={0.5}
+				min={5}
+				max={9.5}
+				showDecimal={true}
+			/>
+			<div className="p-1 border border-gray-3 border-l-0 col-span-4 md:col-span-20">
 				<Button
-					label="Submit Set"
-					loading="Submitting..."
-					completed="Submitted"
+					label="->"
+					loading="..."
+					completed="!"
 					className="w-full h-full"
 					disabled={isPending}
 				/>
 			</div>
 		</div>
 	);
-
-	const [testCount, setTestCount] = useState(10);
 
 	return (
 		<>
@@ -285,13 +292,11 @@ export default function NewSessionForm({
 				<input type="hidden" name="setId" value={currentSet.set_id} />
 				<input type="hidden" name="sessionId" value={sessionData.session_id} />
 				{!sessionData.completed ? (
-					<InputFields
-						className={`col-span-full ${styles.transitionElement}`}
-					/>
+					<InputFields className={`col-span-full`} />
 				) : (
 					<>
-						<InputFields className={`col-span-4 ${styles.transitionElement}`} />
-						<ProgrammedFields className={styles.transitionElement} />
+						<InputFields className={`col-span-4`} />
+						<ProgrammedFields />
 					</>
 				)}
 				<ActionBar />
