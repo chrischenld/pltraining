@@ -22,6 +22,7 @@ const config: Config = {
 		},
 		extend: {
 			gridColumn: {
+				"span-18": "span 18 / span 18",
 				"span-20": "span 20 / span 20",
 				"span-22": "span 22 / span 22",
 			},

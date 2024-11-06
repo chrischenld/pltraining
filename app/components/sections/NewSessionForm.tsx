@@ -256,7 +256,7 @@ export default function NewSessionForm({
 				max={9.5}
 				showDecimal={true}
 			/>
-			<div className="p-1 border border-gray-3 border-l-0 col-span-4 md:col-span-20">
+			<div className="p-1 border border-gray-3 border-l-0 col-span-4 md:col-span-18">
 				<Button
 					label="->"
 					loading="..."

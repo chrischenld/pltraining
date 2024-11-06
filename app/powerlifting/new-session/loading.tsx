@@ -36,16 +36,16 @@ export default function Loading() {
 					{[...Array(3)].map((_, index) => (
 						<div
 							key={index}
-							className={`col-span-2 border border-gray-4 p-1 ${
+							className={`col-span-2 border border-gray-3 p-1 ${
 								index > 0 ? "border-l-0" : ""
 							}`}
 						>
-							<div className="bg-gray-2 aspect-square w-full rounded-[0.125rem]"></div>
+							<div className="bg-gray-2 border border-gray-4 aspect-square w-full rounded-[0.125rem]"></div>
 						</div>
 					))}
 
 					{/* Submit Button */}
-					<div className="p-1 border border-gray-3 border-l-0 col-span-4 md:col-span-18">
+					<div className="p-1 border border-gray-3 border-l-0 col-span-4 md:col-span-18 p-1">
 						<div className="bg-gray-2 border border-gray-4 h-full w-full rounded-[0.125rem]"></div>
 					</div>
 				</div>
